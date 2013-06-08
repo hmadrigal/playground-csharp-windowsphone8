@@ -80,6 +80,11 @@ namespace HomeWork1.PhoneUI
             var uiElementSender = sender as UIElement;
             var endColumn = Math.Truncate(Canvas.GetLeft(uiElementSender) / cellSize);
             var endRow = Math.Truncate(Canvas.GetTop(uiElementSender) / cellSize);
+
+
+            // Correct the final position of the tem
+            Canvas.SetTop(uiElementSender, cellSize * endRow + 10);
+            Canvas.SetLeft(uiElementSender, cellSize * endColumn + 10);
         }
 
 
