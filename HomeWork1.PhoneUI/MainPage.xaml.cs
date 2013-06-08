@@ -16,27 +16,29 @@ namespace HomeWork1.PhoneUI
 {
     public partial class MainPage : PhoneApplicationPage
     {
-        private List<UIElement> _whiteCheckers;
-        private List<UIElement> _blackCheckers;
-        private List<UIElement> _allChrckers;
         private readonly double cellSize = 60d;
+
+        private List<UIElement> _allChrckers;
+
+        private double expectedRow = double.NaN;
+        private double beginRow = double.NaN;
+        private double expectedColumnA = double.NaN;
+        private double expectedColumnB = double.NaN;
+        private double beginColumn = double.NaN;
+
+
         // Constructor
         public MainPage()
         {
             InitializeComponent();
 
-            _whiteCheckers = new List<UIElement>();
-            _blackCheckers = new List<UIElement>();
             _allChrckers = new List<UIElement>();
-
             foreach (var contentControl in BoardPanel.Children.OfType<ContentControl>().Where(cc => cc.Template == Resources["WhiteChekers"]))
             {
-                _whiteCheckers.Add(contentControl);
                 _allChrckers.Add(contentControl);
             }
             foreach (var contentControl in BoardPanel.Children.OfType<ContentControl>().Where(cc => cc.Template == Resources["BlackChekers"]))
             {
-                _blackCheckers.Add(contentControl);
                 _allChrckers.Add(contentControl);
             }
 
@@ -58,39 +60,64 @@ namespace HomeWork1.PhoneUI
             }
         }
 
-        
+
 
         private void OnUIElementMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            var uiElementSender = sender as UIElement;
+            var contentControl = sender as ContentControl;
             var uiPosition = e.GetPosition(BoardPanel);
-            var beginColumn = Math.Truncate(uiPosition.X / cellSize);
-            var beginRow = Math.Truncate(uiPosition.Y / cellSize);
+            beginColumn = Math.Truncate(uiPosition.X / cellSize);
+            beginRow = Math.Truncate(uiPosition.Y / cellSize);
+            var isWhiteChecker = contentControl.Template == Resources["WhiteChekers"];
+
+            // Computing possible landing positions
+            expectedColumnA = expectedColumnB = expectedRow = double.NaN;
+            if (isWhiteChecker)
+            {
+                expectedRow = beginRow == 7 ? 7 : beginRow + 1;
+            }
+            else
+            {
+                expectedRow = beginRow == 0 ? 0 : beginRow - 1;
+            }
+            expectedColumnA = beginColumn == 0 ? double.NaN : beginColumn - 1;
+            expectedColumnB = beginColumn == 7 ? double.NaN : beginColumn + 1;
         }
 
         private void OnUIElementManipulationDelta(object sender, ManipulationDeltaEventArgs e)
         {
-            var uiElementSender = sender as UIElement;
-            Canvas.SetLeft(uiElementSender, Canvas.GetLeft(uiElementSender) + e.DeltaManipulation.Translation.X);
-            Canvas.SetTop(uiElementSender, Canvas.GetTop(uiElementSender) + e.DeltaManipulation.Translation.Y);
+            var contentControl = sender as ContentControl;
+            Canvas.SetLeft(contentControl, Canvas.GetLeft(contentControl) + e.DeltaManipulation.Translation.X);
+            Canvas.SetTop(contentControl, Canvas.GetTop(contentControl) + e.DeltaManipulation.Translation.Y);
         }
 
         private void MainPage_ManipulationCompleted(object sender, ManipulationCompletedEventArgs e)
         {
-            var uiElementSender = sender as UIElement;
-            var endColumn = Math.Truncate(Canvas.GetLeft(uiElementSender) / cellSize);
-            var endRow = Math.Truncate(Canvas.GetTop(uiElementSender) / cellSize);
+            var contentControl = sender as ContentControl;
+            var endColumn = Math.Truncate(Canvas.GetLeft(contentControl) / cellSize);
+            var endRow = Math.Truncate(Canvas.GetTop(contentControl) / cellSize);
 
+            
+            // Validating the final position
+            var isRowValid = endRow == expectedRow;
+            var finalRow = isRowValid ? expectedRow : beginRow;
+            var isColumnValid = endColumn == expectedColumnA || endColumn == expectedColumnB ;
+            var finalColumn = isColumnValid ? endColumn : beginColumn;
+            if (!isColumnValid || !isRowValid)
+            {
+                finalRow = beginRow;
+                finalColumn = beginColumn;
+            }
 
             // Correct the final position of the tem
-            Canvas.SetTop(uiElementSender, cellSize * endRow + 10);
-            Canvas.SetLeft(uiElementSender, cellSize * endColumn + 10);
+            Canvas.SetTop(contentControl, cellSize * finalRow + 10);
+            Canvas.SetLeft(contentControl, cellSize * finalColumn + 10);
         }
 
 
 
 
-        
+
 
 
     }
