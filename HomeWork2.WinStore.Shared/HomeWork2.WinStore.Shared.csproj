@@ -109,6 +109,9 @@
     <Compile Include="..\HomeWork2.Phone.Shared\Services\ContentAccessor.cs">
       <Link>Services\ContentAccessor.cs</Link>
     </Compile>
+    <Compile Include="..\HomeWork2.Phone.Shared\Services\FileCacheManager.cs">
+      <Link>Services\FileCacheManager.cs</Link>
+    </Compile>
     <Compile Include="..\HomeWork2.Phone.Shared\ViewModels\BindableBase.cs">
       <Link>ViewModels\BindableBase.cs</Link>
     </Compile>

@@ -9,8 +9,19 @@ namespace HomeWork2.Services
 
     public sealed class ContentAccessor
     {
+        public async Task<Stream> GetContent(Uri uri)
+        {
+            var cacheManager = FileCacheManager.Instance;
+            var fileKey = cacheManager.GetFileKey(uri.ToString());
+            if (await cacheManager.HasExpired(fileKey))
+            {
+                var inputStream = await GetWebStream(uri);
+                await cacheManager.SaveAsync(fileKey, inputStream);
+            }
+            return await cacheManager.Load(fileKey);
+        }
 
-        public async Task<Stream> GetWebStream(Uri uri)
+        private async Task<Stream> GetWebStream(Uri uri)
         {
             var httpClient = new HttpClient();
             var stream = await httpClient.GetStreamAsync(uri);
