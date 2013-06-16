@@ -6,7 +6,7 @@ using System.Windows.Markup;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
-using HomeWork2.PhoneUI.Resources;
+using HomeWork2.Resources;
 
 namespace HomeWork2.PhoneUI
 {

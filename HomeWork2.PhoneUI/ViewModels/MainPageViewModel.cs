@@ -6,7 +6,24 @@ using System.Threading.Tasks;
 
 namespace HomeWork2.ViewModels
 {
-    class MainPageViewModel
+    public class MainPageViewModel : BindableBase
     {
+        #region CityName (INotifyPropertyChanged Property)
+        public string CityName
+        {
+            get { return _cityName; }
+            set
+            {
+                if (_cityName != value)
+                {
+                    _cityName = value;
+                    RaisePropertyChanged("CityName");
+                }
+            }
+        }
+        private string _cityName;
+        #endregion
+ 
+       
     }
 }
