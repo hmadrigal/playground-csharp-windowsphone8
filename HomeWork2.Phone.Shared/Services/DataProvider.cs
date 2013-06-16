@@ -13,7 +13,7 @@ namespace HomeWork2.Services
     {
         private static readonly string ApiKeyWorldWeatherOnlineCityExplorer = @"5jf3hyq3cjbhfv7vrcd22e84";
 
-        public async Task<List<SearchApiResultItem>> GetSearchResults(string query)
+        public async Task<IEnumerable<SearchApiResultItem>> GetSearchResults(string query)
         {
 
             var uri = new Uri(string.Format(@"http://api.worldweatheronline.com/free/v1/search.ashx?q={1}&format=xml&key={0}", ApiKeyWorldWeatherOnlineCityExplorer, query), UriKind.RelativeOrAbsolute);
@@ -23,7 +23,16 @@ namespace HomeWork2.Services
             {
                 document = XDocument.Load(reader);
             }
-            return Enumerable.Empty<SearchApiResultItem>().ToList();
+            var searchResultQuery = from resultElement in document.Root.Elements("result")
+                                    select new SearchApiResultItem()
+                                    {
+                                        AreaName = resultElement.Element("areaName").Value,
+                                        Country = resultElement.Element("country").Value,
+                                        Region = resultElement.Element("region").Value,
+                                        Latitude = double.Parse(resultElement.Element("latitude").Value),
+                                        Longitude = double.Parse(resultElement.Element("longitude").Value),
+                                    };
+            return searchResultQuery;
         }
 
         private void InitializeDataProvider()

@@ -54,7 +54,7 @@ namespace HomeWork2.Interactivity
 
         public bool CanExecute(object parameter)
         {
-            var result = (bool)_canExecute.DynamicInvoke(parameter);
+            var result = _canExecute == null || (bool)_canExecute.DynamicInvoke(parameter);
             return result;
         }
 
