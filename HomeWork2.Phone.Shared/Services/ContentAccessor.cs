@@ -2,12 +2,20 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
-namespace HomeWork2.Phone.Shared.Services
+namespace HomeWork2.Services
 {
 
     public sealed class ContentAccessor
     {
+
+        public async Task<Stream> GetWebStream(Uri uri)
+        {
+            var httpClient = new HttpClient();
+            var stream = await httpClient.GetStreamAsync(uri);
+            return stream;
+        }
 
         private void InitializeContentAccessor()
         {
