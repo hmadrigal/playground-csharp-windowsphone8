@@ -1,4 +1,5 @@
 ﻿using HomeWork2.Interactivity;
+using HomeWork2.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,9 +34,9 @@ namespace HomeWork2.ViewModels
                 (cityName) => !string.IsNullOrEmpty(cityName) && cityName.Length > 3);
         }
 
-        private void OnSearchCityCommandInvoked(string cityName)
+        private async void OnSearchCityCommandInvoked(string cityName)
         {
-
+            await DataProvider.Instance.GetSearchResults(cityName);
         }
 
         private void OnSaveCityCommandInvoked(string cityName)
