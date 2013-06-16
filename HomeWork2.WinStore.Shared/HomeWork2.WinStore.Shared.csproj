@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{18D6A56C-EA4B-4280-9764-07C4F9FD4605}</ProjectGuid>
-    <OutputType>winmdobj</OutputType>
+    <ProjectGuid>{A8676CFB-3FF6-446E-9F66-54CA7848431C}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>HomeWork2.WinStore.Shared</RootNamespace>
     <AssemblyName>HomeWork2.WinStore.Shared</AssemblyName>
