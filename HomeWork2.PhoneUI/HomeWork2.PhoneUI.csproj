@@ -94,7 +94,6 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="LocalizedStrings.cs" />
-    <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -137,6 +136,10 @@
     <Content Include="Assets\Tiles\IconicTileSmall.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\HomeWork2.Phone.Shared\HomeWork2.Phone.Shared.csproj">
+      <Project>{C1BBF557-EEA4-4D93-AB1C-4949AE6DA0FF}</Project>
+      <Name>HomeWork2.Phone.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HomeWork2.Shared\HomeWork2.Shared.csproj">
       <Project>{DE935C6C-F631-46EA-91B1-3A5F1BDAB427}</Project>
       <Name>HomeWork2.Shared</Name>

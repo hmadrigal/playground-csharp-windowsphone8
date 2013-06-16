@@ -102,6 +102,12 @@
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\HomeWork2.Phone.Shared\ViewModels\BindableBase.cs">
+      <Link>ViewModels\BindableBase.cs</Link>
+    </Compile>
+    <Compile Include="..\HomeWork2.Phone.Shared\ViewModels\MainPageViewModel.cs">
+      <Link>ViewModels\MainPageViewModel.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">

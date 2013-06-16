@@ -105,6 +105,10 @@
       <Project>{de935c6c-f631-46ea-91b1-3a5f1bdab427}</Project>
       <Name>HomeWork2.Shared</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HomeWork2.WinStore.Shared\HomeWork2.WinStore.Shared.csproj">
+      <Project>{a8676cfb-3ff6-446e-9f66-54ca7848431c}</Project>
+      <Name>HomeWork2.WinStore.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
