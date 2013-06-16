@@ -71,9 +71,18 @@
 						<ColumnDefinition Width="*" />
 						<ColumnDefinition Width="Auto" />
 					</Grid.ColumnDefinitions>
-					<TextBlock Text="City to explore" />
-        			<TextBox Grid.Row="1" Text="San Jose" />
-					<Button Grid.Row="1" Content="Search" Grid.Column="1"  />
+                    <TextBlock>
+                        <Run Text="Currently exploring: " />
+                        <LineBreak />
+                        <Run Text="{Binding SelectedCity.AreaName}"/>
+                        <Run Text="  "/>
+                        <Run Text="{Binding SelectedCity.Country}"/>
+                    </TextBlock>
+                    <TextBox Grid.Row="1" Text="{Binding CityName,Mode=TwoWay}" />
+                    <Button Grid.Row="1" Content="Search" Grid.Column="1" 
+                            Command="{Binding SearchCityCommand,Mode=OneTime}"
+                            CommandParameter="{Binding CityName}"
+                            />
 				</Grid>
         	</phone:PanoramaItem>
         </phone:Panorama>

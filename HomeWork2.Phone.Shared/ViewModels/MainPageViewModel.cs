@@ -1,4 +1,5 @@
 ﻿using HomeWork2.Interactivity;
+using HomeWork2.Models;
 using HomeWork2.Services;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,16 @@ namespace HomeWork2.ViewModels
         private string _cityName;
         #endregion
 
+        #region SelectedCity (INotifyPropertyChanged Property)
+        public SearchApiResultItem SelectedCity
+        {
+            get { return _searchApiResultItem; }
+            set { SetProperty(ref _searchApiResultItem, value); }
+        }
+        private SearchApiResultItem _searchApiResultItem;
+        #endregion
+        
+
         public ICommand SearchCityCommand { get; private set; }
 
         public ICommand SaveCityCommand { get; private set; }
@@ -36,7 +47,7 @@ namespace HomeWork2.ViewModels
 
         private async void OnSearchCityCommandInvoked(string cityName)
         {
-            await DataProvider.Instance.GetSearchResults(cityName);
+            var searchResults = await DataProvider.Instance.GetSearchResults(cityName);
         }
 
         private void OnSaveCityCommandInvoked(string cityName)
