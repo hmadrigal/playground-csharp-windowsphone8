@@ -100,8 +100,15 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <ProjectReference Include="..\HomeWork2.Shared\HomeWork2.Shared.csproj">
+      <Project>{de935c6c-f631-46ea-91b1-3a5f1bdab427}</Project>
+      <Name>HomeWork2.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\HomeWork2.Phone.Shared\Services\ContentAccessor.cs">
+      <Link>Services\ContentAccessor.cs</Link>
+    </Compile>
     <Compile Include="..\HomeWork2.Phone.Shared\ViewModels\BindableBase.cs">
       <Link>ViewModels\BindableBase.cs</Link>
     </Compile>
@@ -110,6 +117,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
   </PropertyGroup>
