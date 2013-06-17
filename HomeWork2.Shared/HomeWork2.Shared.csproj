@@ -34,7 +34,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Interactivity\RelayCommand.cs" />
-    <Compile Include="Models\SearchApiResultItem.cs" />
+    <Compile Include="Models\PhotoApi.cs" />
+    <Compile Include="Models\SearchApi.cs" />
+    <Compile Include="Models\WeatherApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

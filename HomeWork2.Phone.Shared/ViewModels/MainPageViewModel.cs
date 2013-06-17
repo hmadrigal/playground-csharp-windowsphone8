@@ -30,6 +30,17 @@ namespace HomeWork2.ViewModels
         private SearchApiResultItem _searchApiResultItem;
         #endregion
 
+        #region CurrentWeather (INotifyPropertyChanged Property)
+        public WeatherCurrentItem CurrentWeather
+        {
+            get { return _currentWeather; }
+            set { SetProperty(ref _currentWeather, value); }
+        }
+        private WeatherCurrentItem _currentWeather;
+        #endregion
+
+        public ObservableCollection<WeatheForecastItem> WeatherForecast { get; private set; }
+
         public ObservableCollection<SearchApiResultItem> SearchResults { get; private set; }
 
         public ICommand SearchCityCommand { get; private set; }
@@ -40,6 +51,9 @@ namespace HomeWork2.ViewModels
 
         public MainPageViewModel()
         {
+            SearchResults = new ObservableCollection<SearchApiResultItem>();
+            WeatherForecast = new ObservableCollection<WeatheForecastItem>();
+
             SaveCityCommand = new RelayCommand<string>(
                 OnSaveCityCommandInvoked,
                 (cityName) => !string.IsNullOrEmpty(cityName)
@@ -50,13 +64,28 @@ namespace HomeWork2.ViewModels
                 (cityName) => !string.IsNullOrEmpty(cityName) && cityName.Length > 3);
 
             SelectCityCommand = new RelayCommand<SearchApiResultItem>(OnSelectCityCommandInvoked);
-            SearchResults = new ObservableCollection<SearchApiResultItem>();
         }
 
-        private void OnSelectCityCommandInvoked(SearchApiResultItem selectedSearchApiResultItem)
+        private async void OnSelectCityCommandInvoked(SearchApiResultItem selectedSearchApiResultItem)
         {
             SelectedCity = selectedSearchApiResultItem;
             SearchResults.Clear();
+
+            if (SelectedCity == null)
+            {
+                return;
+            }
+
+            var weatherResult = await DataProvider.Instance.GetWeatherResults(SelectedCity.Latitude, SelectedCity.Longitude);
+            WeatherForecast.Clear();
+            foreach (var item in weatherResult.Item2)
+            {
+                WeatherForecast.Add(item);
+            }
+            CurrentWeather = weatherResult.Item1;
+
+            var photoResult = await DataProvider.Instance.GetPhotos(SelectedCity.Latitude, SelectedCity.Longitude);
+
         }
 
         private async void OnSearchCityCommandInvoked(string cityName)
