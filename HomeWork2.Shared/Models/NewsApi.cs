@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HomeWork2.Models
 {
-    public class NewsEntry
+    public class NewsItem
     {
         public string Title { get; set; }
         public string Description { get; set; }

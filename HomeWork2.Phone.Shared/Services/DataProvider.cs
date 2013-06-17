@@ -86,7 +86,7 @@ namespace HomeWork2.Services
             return new Tuple<WeatherCurrentItem, IEnumerable<WeatheForecastItem>>(current, forecastQuery);
         }
 
-        public async Task<IEnumerable<PhotosItem>> GetPhotos(double latitude, double longitude)
+        public async Task<IEnumerable<PhotoItem>> GetPhotos(double latitude, double longitude)
         {
             var uri = new Uri(string.Format(@"http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key={0}&lat={1}&lon={2}&format=rest", ApiKeyFlickrCityExplorer, latitude, longitude));
             var contentStream = await ContentAccessor.Instance.GetContent(uri);
@@ -100,7 +100,7 @@ namespace HomeWork2.Services
                              let server = (string)photoElement.Attribute("server")
                              let id = (string)photoElement.Attribute("id")
                              let secret = (string)photoElement.Attribute("secret")
-                             select new PhotosItem()
+                             select new PhotoItem()
                              {
                                  Id = id,
                                  Owner = (string)photoElement.Attribute("owner"),
@@ -111,7 +111,7 @@ namespace HomeWork2.Services
                                  Ispublic = (string)photoElement.Attribute("ispublic"),
                                  Isfriend = (string)photoElement.Attribute("isfriend"),
                                  Isfamily = (string)photoElement.Attribute("isfamily"),
-                                 SmallImageUrl = string.Format(@"http://farm{0}.staticflickr.com/{1}/{2}_{3}_s.jpg",
+                                 SmallImageUrl = string.Format(@"http://farm{0}.staticflickr.com/{1}/{2}_{3}_m.jpg",
                                      farm,//farm-id
                                      server,//server-id
                                      id,//id
@@ -122,7 +122,7 @@ namespace HomeWork2.Services
             return photoQuery;
         }
 
-        public async Task<IEnumerable<NewsEntry>> GetNews(string query)
+        public async Task<IEnumerable<NewsItem>> GetNews(string query)
         {
             var uri = new Uri(string.Format(@"http://api.feedzilla.com/v1/articles/search.rss?q={0}", query));
             var contentStream = await ContentAccessor.Instance.GetContent(uri);
@@ -134,7 +134,7 @@ namespace HomeWork2.Services
             var newsQuery = from photoElement in document.Root.Element("channel").Elements("item")
                             let description = (string)photoElement.Element("description")
                             let indexLtChar = description.IndexOf("<")
-                            select new NewsEntry()
+                            select new NewsItem()
                              {
                                  Description = description.Substring(0, indexLtChar < 0 ? description.Length : indexLtChar),
                                  PubDate = (string)photoElement.Element("pubDate"),

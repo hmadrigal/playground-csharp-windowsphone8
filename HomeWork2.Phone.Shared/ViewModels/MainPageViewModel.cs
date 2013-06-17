@@ -43,6 +43,10 @@ namespace HomeWork2.ViewModels
 
         public ObservableCollection<SearchApiResultItem> SearchResults { get; private set; }
 
+        public ObservableCollection<PhotoItem> Photos { get; private set; }
+
+        public ObservableCollection<NewsItem> News { get; private set; }
+
         public ICommand SearchCityCommand { get; private set; }
 
         public ICommand SelectCityCommand { get; private set; }
@@ -53,6 +57,8 @@ namespace HomeWork2.ViewModels
         {
             SearchResults = new ObservableCollection<SearchApiResultItem>();
             WeatherForecast = new ObservableCollection<WeatheForecastItem>();
+            Photos = new ObservableCollection<PhotoItem>();
+            News = new ObservableCollection<NewsItem>();
 
             SaveCityCommand = new RelayCommand<string>(
                 OnSaveCityCommandInvoked,
@@ -76,6 +82,24 @@ namespace HomeWork2.ViewModels
                 return;
             }
 
+            var photoResult = await DataProvider.Instance.GetPhotos(SelectedCity.Latitude, SelectedCity.Longitude);
+            Photos.Clear();
+            foreach (var item in photoResult)
+            {
+                Photos.Add(item);
+            }
+
+            var newsResult = await DataProvider.Instance.GetNews(string.Format("{0} {1}", SelectedCity.AreaName, SelectedCity.Country));
+            if (!newsResult.Any())
+            {
+                newsResult = await DataProvider.Instance.GetNews(string.Format("{0} {1}", SelectedCity.AreaName, SelectedCity.Region));
+            }
+            News.Clear();
+            foreach (var item in newsResult)
+            {
+                News.Add(item);
+            }
+
             var weatherResult = await DataProvider.Instance.GetWeatherResults(SelectedCity.Latitude, SelectedCity.Longitude);
             WeatherForecast.Clear();
             foreach (var item in weatherResult.Item2)
@@ -83,14 +107,6 @@ namespace HomeWork2.ViewModels
                 WeatherForecast.Add(item);
             }
             CurrentWeather = weatherResult.Item1;
-
-            var photoResult = await DataProvider.Instance.GetPhotos(SelectedCity.Latitude, SelectedCity.Longitude);
-
-            var newsResult = await DataProvider.Instance.GetNews(string.Format("{0} {1}", SelectedCity.AreaName, SelectedCity.Country));
-            if (!newsResult.Any())
-            {
-                newsResult = await DataProvider.Instance.GetNews(string.Format("{0} {1}", SelectedCity.AreaName, SelectedCity.Region));
-            }
 
         }
 

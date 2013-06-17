@@ -5,7 +5,7 @@ using System.Text;
 
 namespace HomeWork2.Models
 {
-    public class PhotosItem
+    public class PhotoItem
     {
         public string Id { get; set; }
         public string Owner { get; set; }
