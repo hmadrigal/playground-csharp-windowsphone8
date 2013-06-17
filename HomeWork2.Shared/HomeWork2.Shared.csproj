@@ -34,6 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Interactivity\RelayCommand.cs" />
+    <Compile Include="Models\NewsApi.cs" />
     <Compile Include="Models\PhotoApi.cs" />
     <Compile Include="Models\SearchApi.cs" />
     <Compile Include="Models\WeatherApi.cs" />

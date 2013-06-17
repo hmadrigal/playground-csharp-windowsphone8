@@ -86,6 +86,12 @@ namespace HomeWork2.ViewModels
 
             var photoResult = await DataProvider.Instance.GetPhotos(SelectedCity.Latitude, SelectedCity.Longitude);
 
+            var newsResult = await DataProvider.Instance.GetNews(string.Format("{0} {1}", SelectedCity.AreaName, SelectedCity.Country));
+            if (!newsResult.Any())
+            {
+                newsResult = await DataProvider.Instance.GetNews(string.Format("{0} {1}", SelectedCity.AreaName, SelectedCity.Region));
+            }
+
         }
 
         private async void OnSearchCityCommandInvoked(string cityName)

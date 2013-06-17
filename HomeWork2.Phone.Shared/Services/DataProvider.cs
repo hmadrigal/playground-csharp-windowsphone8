@@ -96,26 +96,54 @@ namespace HomeWork2.Services
                 document = XDocument.Load(reader);
             }
             var photoQuery = from photoElement in document.Root.Element("photos").Elements("photo")
+                             let farm = (string)photoElement.Attribute("farm")
+                             let server = (string)photoElement.Attribute("server")
+                             let id = (string)photoElement.Attribute("id")
+                             let secret = (string)photoElement.Attribute("secret")
                              select new PhotosItem()
                              {
-                                 Id = (string)photoElement.Attribute("id"),
+                                 Id = id,
                                  Owner = (string)photoElement.Attribute("owner"),
-                                 Secret = (string)photoElement.Attribute("secret"),
-                                 Server = (string)photoElement.Attribute("server"),
-                                 Farm = (string)photoElement.Attribute("farm"),
+                                 Secret = secret,
+                                 Server = server,
+                                 Farm = farm,
                                  Title = (string)photoElement.Attribute("title"),
                                  Ispublic = (string)photoElement.Attribute("ispublic"),
                                  Isfriend = (string)photoElement.Attribute("isfriend"),
                                  Isfamily = (string)photoElement.Attribute("isfamily"),
                                  SmallImageUrl = string.Format(@"http://farm{0}.staticflickr.com/{1}/{2}_{3}_s.jpg",
-                                     (string)photoElement.Attribute("farm"),//farm-id
-                                     (string)photoElement.Attribute("server"),//server-id
-                                     (string)photoElement.Attribute("id"),//id
-                                     (string)photoElement.Attribute("secret")//secret
+                                     farm,//farm-id
+                                     server,//server-id
+                                     id,//id
+                                     secret//secret
                                  ),
                              };
 
             return photoQuery;
+        }
+
+        public async Task<IEnumerable<NewsEntry>> GetNews(string query)
+        {
+            var uri = new Uri(string.Format(@"http://api.feedzilla.com/v1/articles/search.rss?q={0}", query));
+            var contentStream = await ContentAccessor.Instance.GetContent(uri);
+            XDocument document;
+            using (StreamReader reader = new StreamReader(contentStream))
+            {
+                document = XDocument.Load(reader);
+            }
+            var newsQuery = from photoElement in document.Root.Element("channel").Elements("item")
+                            let description = (string)photoElement.Element("description")
+                            let indexLtChar = description.IndexOf("<")
+                            select new NewsEntry()
+                             {
+                                 Description = description.Substring(0, indexLtChar < 0 ? description.Length : indexLtChar),
+                                 PubDate = (string)photoElement.Element("pubDate"),
+                                 SourceLabel = (string)photoElement.Element("source"),
+                                 SourceUrl = (string)photoElement.Element("source").Attribute("url"),
+                                 Title = (string)photoElement.Element("title"),
+                             };
+
+            return newsQuery;
         }
 
         private void InitializeDataProvider()

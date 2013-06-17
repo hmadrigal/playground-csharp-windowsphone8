@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace HomeWork2.Models
+{
+    public class NewsEntry
+    {
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string SourceLabel { get; set; }
+        public string SourceUrl { get; set; }
+        public string PubDate { get; set; }
+    }
+}
