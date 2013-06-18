@@ -13,6 +13,14 @@ namespace HomeWork2.Views
 {
     public partial class MainPage : PhoneApplicationPage
     {
+
+        private HomeWork2.ViewModels.MainPageViewModel _viewModel;
+
+        public HomeWork2.ViewModels.MainPageViewModel ViewModel
+        {
+            get { return _viewModel ?? (_viewModel = DataContext as HomeWork2.ViewModels.MainPageViewModel); }
+        }
+
         // Constructor
         public MainPage()
         {
@@ -20,6 +28,15 @@ namespace HomeWork2.Views
 
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
+            Loaded += MainPage_Loaded;
+        }
+
+        void MainPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.ViewLoadedCommand.CanExecute(null))
+            {
+                ViewModel.ViewLoadedCommand.Execute(null);
+            }
         }
 
         // Sample code for building a localized ApplicationBar

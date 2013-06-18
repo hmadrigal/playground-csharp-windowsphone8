@@ -11,11 +11,12 @@ namespace HomeWork2.Interactivity
         private Delegate _canExecute;
         private Delegate _cancelAction;
         private Delegate _executeAction;
+        private int _parameterCount;
         public event EventHandler CanExecuteChanged;
 
         public bool CanExecute(object parameter)
         {
-            var result = (bool)_canExecute.DynamicInvoke(parameter);
+            var result = (_canExecute == null && _executeAction != null) || (bool)_canExecute.DynamicInvoke(parameter);
             return result;
         }
 
@@ -23,7 +24,7 @@ namespace HomeWork2.Interactivity
         {
             if (CanExecute(parameter))
             {
-                _executeAction.DynamicInvoke(parameter);
+                ExecuteAction(parameter);
             }
             else
             {
@@ -31,9 +32,22 @@ namespace HomeWork2.Interactivity
             }
         }
 
+        private void ExecuteAction(object parameter)
+        {
+            if (_parameterCount == 0)
+            {
+                _executeAction.DynamicInvoke();
+            }
+            else
+            {
+                _executeAction.DynamicInvoke(parameter);
+            }
+        }
+
         public RelayCommand(Action execution)
         {
             _executeAction = execution;
+            _parameterCount = _executeAction.Method.GetParameters().Length;
         }
 
         public RelayCommand(Action<Object> execution, Func<object, bool> canExecute = null, Action<object> cancelAction = null)
@@ -42,6 +56,8 @@ namespace HomeWork2.Interactivity
             _canExecute = canExecute;
             _cancelAction = cancelAction;
         }
+
+
 
     }
 

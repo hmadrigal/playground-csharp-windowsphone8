@@ -69,6 +69,8 @@ namespace HomeWork2.ViewModels
 
         public ICommand SelectCityCommand { get; private set; }
 
+        public ICommand ViewLoadedCommand { get; private set; }
+
         public MainPageViewModel()
         {
             SearchResults = new ObservableCollection<SearchApiResultItem>();
@@ -81,7 +83,18 @@ namespace HomeWork2.ViewModels
                 (cityName) => !string.IsNullOrEmpty(cityName) && cityName.Length > 3);
 
             SelectCityCommand = new RelayCommand<SearchApiResultItem>(OnSelectCityCommandInvoked);
+
             Title = @"City Explorer";
+            ViewLoadedCommand = new RelayCommand(OnViewLoadedCommandInvoked);
+        }
+
+        private async void OnViewLoadedCommandInvoked()
+        {
+            SelectedCity = await FileManager.Instance.LoadAsync<SearchApiResultItem>("SelectedCity.obj", DataContractObjectSerializer.Instance);
+            if (SelectedCity != null)
+            {
+                await LoadSelectedCity();
+            }
         }
 
         private async void OnSelectCityCommandInvoked(SearchApiResultItem selectedSearchApiResultItem)
@@ -93,6 +106,14 @@ namespace HomeWork2.ViewModels
             {
                 return;
             }
+
+            await FileManager.Instance.SaveAsync<SearchApiResultItem>("SelectedCity.obj", SelectedCity, DataContractObjectSerializer.Instance);
+
+            await LoadSelectedCity();
+        }
+
+        private async System.Threading.Tasks.Task LoadSelectedCity()
+        {
             IsLoading = true;
             Title = string.Concat(SelectedCity.Region, ", ", SelectedCity.Country);
             Photos.Clear();

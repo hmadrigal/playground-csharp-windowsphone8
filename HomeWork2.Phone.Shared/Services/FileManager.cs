@@ -59,14 +59,21 @@ namespace HomeWork2.Services
         {
             var dataFolder = await _localFolder.CreateFolderAsync(CacheFolderName, CreationCollisionOption.OpenIfExists);
             var targetFile = await dataFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
-            serializer.Serialize<T>(await targetFile.OpenStreamForWriteAsync(), instance);
+            using (var outputStream = await targetFile.OpenStreamForWriteAsync())
+            {
+                serializer.Serialize<T>(outputStream, instance);
+            }
         }
 
         public async Task<T> LoadAsync<T>(string fileName, IObjectSerializer serializer)
         {
             var dataFolder = await _localFolder.CreateFolderAsync(CacheFolderName, CreationCollisionOption.OpenIfExists);
             var targetFile = await dataFolder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
-            var instance = (T)serializer.Deserialize<T>(await targetFile.OpenStreamForReadAsync(), typeof(T));
+            T instance = default(T);
+            using (var inputStream = await targetFile.OpenStreamForReadAsync())
+            {
+                instance = (T)serializer.Deserialize<T>(inputStream, typeof(T));
+            }
             return instance;
         }
 
