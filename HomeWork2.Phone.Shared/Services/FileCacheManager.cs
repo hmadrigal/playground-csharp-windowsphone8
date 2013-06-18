@@ -19,7 +19,7 @@ namespace HomeWork2.Services
                 var file = await dataFolder.GetFileAsync(fileKey);
                 isThereFile = true;
             }
-            catch (FileNotFoundException fileNotFoundException)
+            catch (FileNotFoundException)
             {
                 isThereFile = false;
             }
@@ -46,13 +46,8 @@ namespace HomeWork2.Services
 
         public async Task SaveAsync(string fileKey, Stream inputStream)
         {
-            // Create a new folder name DataFolder.
             var dataFolder = await _localFolder.CreateFolderAsync(CacheFolderName, CreationCollisionOption.OpenIfExists);
-
-            // Create a new file named DataFile.txt.
             var targetFile = await dataFolder.CreateFileAsync(fileKey, CreationCollisionOption.ReplaceExisting);
-
-            // Write the data from the textbox.
             using (var outputStream = await targetFile.OpenStreamForWriteAsync())
             {
                 await inputStream.CopyToAsync(outputStream, 4096);
