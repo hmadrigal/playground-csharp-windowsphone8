@@ -46,6 +46,7 @@ namespace HomeWork2.Services
         private void InitializeDataContractObjectSerializer()
         {
         }
+     
         #region Singleton Pattern w/ Constructor
         private DataContractObjectSerializer()
             : base()
@@ -65,7 +66,5 @@ namespace HomeWork2.Services
             public static DataContractObjectSerializer _Instance = new DataContractObjectSerializer();
         }
         #endregion
-
-
     }
 }

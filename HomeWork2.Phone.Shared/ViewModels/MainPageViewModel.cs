@@ -57,7 +57,6 @@ namespace HomeWork2.ViewModels
         private bool _isLoading;
         #endregion
 
-
         public ObservableCollection<WeatheForecastItem> WeatherForecast { get; private set; }
 
         public ObservableCollection<SearchApiResultItem> SearchResults { get; private set; }
@@ -70,19 +69,12 @@ namespace HomeWork2.ViewModels
 
         public ICommand SelectCityCommand { get; private set; }
 
-        public ICommand SaveCityCommand { get; private set; }
-
         public MainPageViewModel()
         {
             SearchResults = new ObservableCollection<SearchApiResultItem>();
             WeatherForecast = new ObservableCollection<WeatheForecastItem>();
             Photos = new ObservableCollection<PhotoItem>();
             News = new ObservableCollection<NewsItem>();
-
-            SaveCityCommand = new RelayCommand<string>(
-                OnSaveCityCommandInvoked,
-                (cityName) => !string.IsNullOrEmpty(cityName)
-                );
 
             SearchCityCommand = new RelayCommand<string>(
                 OnSearchCityCommandInvoked,
@@ -145,8 +137,5 @@ namespace HomeWork2.ViewModels
             IsLoading = false;
         }
 
-        private void OnSaveCityCommandInvoked(string cityName)
-        {
-        }
     }
 }
