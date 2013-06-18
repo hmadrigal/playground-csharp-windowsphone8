@@ -109,7 +109,7 @@
         <!--TitlePanel contains the name of the application and page title-->
 
         <!--ContentPanel - place additional content here-->
-        <phone:Panorama Title="City Explorer">
+        <phone:Panorama Title="{Binding Title}">
             <phone:PanoramaItem Header="Photos">
                 <phone:LongListSelector 
 					ItemsSource="{Binding Photos}" ItemTemplate="{StaticResource PhotoItemDataTemplate}" 
@@ -173,14 +173,7 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock TextWrapping="Wrap">
-                        <Run Text="Exploring: "/>
-                        <Run Text="{Binding SelectedCity.Country}"/>
-                        <Run Text="  "/>
-                        <Run Text="{Binding SelectedCity.Region}"/>
-                        <Run Text="  "/>
-                        <Run Text="{Binding SelectedCity.AreaName}"/>
-                    </TextBlock>
+                    <TextBlock TextWrapping="Wrap" Text="Look for a city: "/>
                     <TextBox Grid.Row="1" Text="{Binding CityName,Mode=TwoWay}" />
                     <Button Grid.Row="1" Content="Search" Grid.Column="1" 
                             Command="{Binding SearchCityCommand,Mode=OneTime}"
@@ -190,6 +183,7 @@
                 </Grid>
             </phone:PanoramaItem>
         </phone:Panorama>
+        <ProgressBar VerticalAlignment="Top" IsIndeterminate="{Binding IsLoading}" />
     </Grid>
 
 </phone:PhoneApplicationPage>

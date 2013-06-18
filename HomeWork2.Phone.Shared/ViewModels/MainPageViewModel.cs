@@ -12,6 +12,15 @@ namespace HomeWork2.ViewModels
 {
     public class MainPageViewModel : BindableBase
     {
+        #region Title (INotifyPropertyChanged Property)
+        public string Title
+        {
+            get { return _title; }
+            set { SetProperty(ref _title, value); }
+        }
+        private string _title;
+        #endregion
+
         #region CityName (INotifyPropertyChanged Property)
         public string CityName
         {
@@ -38,6 +47,16 @@ namespace HomeWork2.ViewModels
         }
         private WeatherCurrentItem _currentWeather;
         #endregion
+
+        #region IsLoading (INotifyPropertyChanged Property)
+        public bool IsLoading
+        {
+            get { return _isLoading; }
+            set { SetProperty(ref _isLoading, value); }
+        }
+        private bool _isLoading;
+        #endregion
+
 
         public ObservableCollection<WeatheForecastItem> WeatherForecast { get; private set; }
 
@@ -70,6 +89,7 @@ namespace HomeWork2.ViewModels
                 (cityName) => !string.IsNullOrEmpty(cityName) && cityName.Length > 3);
 
             SelectCityCommand = new RelayCommand<SearchApiResultItem>(OnSelectCityCommandInvoked);
+            Title = @"City Explorer";
         }
 
         private async void OnSelectCityCommandInvoked(SearchApiResultItem selectedSearchApiResultItem)
@@ -81,9 +101,14 @@ namespace HomeWork2.ViewModels
             {
                 return;
             }
+            IsLoading = true;
+            Title = string.Concat(SelectedCity.Region, ", ", SelectedCity.Country);
+            Photos.Clear();
+            News.Clear();
+            WeatherForecast.Clear();
+            CurrentWeather = null;
 
             var photoResult = await DataProvider.Instance.GetPhotos(SelectedCity.Latitude, SelectedCity.Longitude);
-            Photos.Clear();
             foreach (var item in photoResult)
             {
                 Photos.Add(item);
@@ -94,30 +119,30 @@ namespace HomeWork2.ViewModels
             {
                 newsResult = await DataProvider.Instance.GetNews(string.Format("{0} {1}", SelectedCity.AreaName, SelectedCity.Region));
             }
-            News.Clear();
             foreach (var item in newsResult)
             {
                 News.Add(item);
             }
 
             var weatherResult = await DataProvider.Instance.GetWeatherResults(SelectedCity.Latitude, SelectedCity.Longitude);
-            WeatherForecast.Clear();
             foreach (var item in weatherResult.Item2)
             {
                 WeatherForecast.Add(item);
             }
             CurrentWeather = weatherResult.Item1;
-
+            IsLoading = false;
         }
 
         private async void OnSearchCityCommandInvoked(string cityName)
         {
+            IsLoading = true;
             SearchResults.Clear();
             var searchResults = await DataProvider.Instance.GetSearchResults(cityName);
             foreach (var item in searchResults.OrderBy(i => string.Concat(i.Country, i.Region, i.AreaName)))
             {
                 SearchResults.Add(item);
             }
+            IsLoading = false;
         }
 
         private void OnSaveCityCommandInvoked(string cityName)
