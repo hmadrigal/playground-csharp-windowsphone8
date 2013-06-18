@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 using System.Net;
-using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 namespace HomeWork2.Services
 {
@@ -23,9 +23,25 @@ namespace HomeWork2.Services
 
         private async Task<Stream> GetWebStream(Uri uri)
         {
-            var httpClient = new HttpClient();
-            var stream = await httpClient.GetStreamAsync(uri);
-            return stream;
+            Stream resultStream = null;
+            await Task.Run( () =>
+            {
+                ManualResetEvent allDone = new ManualResetEvent(false);
+                var currentRequest = (HttpWebRequest)HttpWebRequest.Create(uri);
+                currentRequest.BeginGetResponse(
+                    (IAsyncResult result) =>
+                    {
+                        HttpWebRequest request = result.AsyncState as HttpWebRequest;
+                        if (request != null)
+                        {
+                            WebResponse response = request.EndGetResponse(result);
+                            resultStream = response.GetResponseStream();
+                        }
+                        allDone.Set();
+                    }, currentRequest);
+                allDone.WaitOne();
+            });
+            return resultStream;
         }
 
         private void InitializeContentAccessor()
