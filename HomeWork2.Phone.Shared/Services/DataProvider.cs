@@ -18,7 +18,7 @@ namespace HomeWork2.Services
         {
 
             var uri = new Uri(string.Format(@"http://api.worldweatheronline.com/free/v1/search.ashx?q={1}&format=xml&key={0}", ApiKeyWorldWeatherOnlineCityExplorer, query), UriKind.RelativeOrAbsolute);
-            var contentStream = await ContentAccessor.Instance.GetContent(uri);
+            var contentStream = await ContentAccessors.Instance.GetContent(uri, KeepStoredPolicyAccessor.Instance);
             XDocument document;
             using (StreamReader reader = new StreamReader(contentStream))
             {
@@ -39,7 +39,8 @@ namespace HomeWork2.Services
         public async Task<Tuple<WeatherCurrentItem, IEnumerable<WeatheForecastItem>>> GetWeatherResults(double latitude, double longitude)
         {
             var uri = new Uri(string.Format(@"http://api.worldweatheronline.com/free/v1/weather.ashx?q={1}%2C{2}&format=xml&num_of_days=5&key={0}", ApiKeyWorldWeatherOnlineCityExplorer, latitude, longitude));
-            var contentStream = await ContentAccessor.Instance.GetContent(uri);
+            LifeTimePolicyAccessor.Instance.SetTimeToLive(uri, TimeSpan.FromMinutes(30));
+            var contentStream = await ContentAccessors.Instance.GetContent(uri, LifeTimePolicyAccessor.Instance);
             XDocument document;
             using (StreamReader reader = new StreamReader(contentStream))
             {
@@ -89,7 +90,8 @@ namespace HomeWork2.Services
         public async Task<IEnumerable<PhotoItem>> GetPhotos(double latitude, double longitude)
         {
             var uri = new Uri(string.Format(@"http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key={0}&lat={1}&lon={2}&format=rest", ApiKeyFlickrCityExplorer, latitude, longitude));
-            var contentStream = await ContentAccessor.Instance.GetContent(uri);
+            LifeTimePolicyAccessor.Instance.SetTimeToLive(uri, TimeSpan.FromMinutes(30));
+            var contentStream = await ContentAccessors.Instance.GetContent(uri, LifeTimePolicyAccessor.Instance);
             XDocument document;
             using (StreamReader reader = new StreamReader(contentStream))
             {
@@ -125,7 +127,8 @@ namespace HomeWork2.Services
         public async Task<IEnumerable<NewsItem>> GetNews(string query)
         {
             var uri = new Uri(string.Format(@"http://api.feedzilla.com/v1/articles/search.rss?q={0}", query));
-            var contentStream = await ContentAccessor.Instance.GetContent(uri);
+            LifeTimePolicyAccessor.Instance.SetTimeToLive(uri, TimeSpan.FromMinutes(30));
+            var contentStream = await ContentAccessors.Instance.GetContent(uri, LifeTimePolicyAccessor.Instance);
             XDocument document;
             using (StreamReader reader = new StreamReader(contentStream))
             {

@@ -39,6 +39,7 @@
     <Compile Include="Models\SearchApi.cs" />
     <Compile Include="Models\WeatherApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IContentPolicyAccessor.cs" />
     <Compile Include="Services\IObjectSerializer.cs" />
   </ItemGroup>
   <ItemGroup />

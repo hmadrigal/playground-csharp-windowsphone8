@@ -5,38 +5,10 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 namespace HomeWork2.Services
 {
-
     public sealed class FileManager
     {
-        private static readonly string CacheFolderName = @"CacheFolder";
+        internal static readonly string CacheFolderName = @"CacheFolder";
         private Windows.Storage.IStorageFolder _localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
-
-        public async Task<bool> HasExpired(string fileKey)
-        {
-            var dataFolder = await _localFolder.CreateFolderAsync(CacheFolderName, CreationCollisionOption.OpenIfExists);
-            var isThereFile = false;
-            try
-            {
-                var file = await dataFolder.GetFileAsync(fileKey);
-                isThereFile = true;
-            }
-            catch (FileNotFoundException)
-            {
-                isThereFile = false;
-            }
-            return !isThereFile;
-        }
-
-        public string GetFileKey(string url)
-        {
-            UInt64 hashedValue = 3074457345618258791ul;
-            for (int i = 0; i < url.Length; i++)
-            {
-                hashedValue += url[i];
-                hashedValue *= 3074457345618258799ul;
-            }
-            return hashedValue.ToString();
-        }
 
         public async Task<Stream> Load(string fileKey)
         {

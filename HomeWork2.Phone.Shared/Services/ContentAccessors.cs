@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 namespace HomeWork2.Services
 {
 
-    public sealed class ContentAccessor
+    public sealed class ContentAccessors
     {
-        public async Task<Stream> GetContent(Uri uri)
+        public async Task<Stream> GetContent(Uri uri, IContentPolicyAccessor contentPolicyAccessor)
         {
             var cacheManager = FileManager.Instance;
-            var fileKey = cacheManager.GetFileKey(uri.ToString());
-            if (await cacheManager.HasExpired(fileKey))
+            var fileKey = contentPolicyAccessor.GetFileKey(uri);
+            if (contentPolicyAccessor.IsExpired(uri))
             {
                 var inputStream = await GetWebStream(uri);
                 await cacheManager.SaveAsync(fileKey, inputStream);
@@ -24,7 +24,7 @@ namespace HomeWork2.Services
         private async Task<Stream> GetWebStream(Uri uri)
         {
             Stream resultStream = null;
-            await Task.Run( () =>
+            await Task.Run(() =>
             {
                 ManualResetEvent allDone = new ManualResetEvent(false);
                 var currentRequest = (HttpWebRequest)HttpWebRequest.Create(uri);
@@ -49,12 +49,12 @@ namespace HomeWork2.Services
         }
 
         #region Singleton Pattern w/ Constructor
-        private ContentAccessor()
+        private ContentAccessors()
             : base()
         {
             InitializeContentAccessor();
         }
-        public static ContentAccessor Instance
+        public static ContentAccessors Instance
         {
             get
             {
@@ -64,7 +64,7 @@ namespace HomeWork2.Services
         private class SingletonContentAccessorCreator
         {
             private SingletonContentAccessorCreator() { }
-            public static ContentAccessor _Instance = new ContentAccessor();
+            public static ContentAccessors _Instance = new ContentAccessors();
         }
         #endregion
     }

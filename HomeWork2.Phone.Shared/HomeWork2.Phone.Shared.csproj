@@ -84,7 +84,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\ContentAccessor.cs" />
+    <Compile Include="Services\ContentAccessors.cs" />
+    <Compile Include="Services\ContentPolicyAccessor.cs" />
     <Compile Include="Services\DataProvider.cs" />
     <Compile Include="Services\FileManager.cs" />
     <Compile Include="ViewModels\BindableBase.cs" />
