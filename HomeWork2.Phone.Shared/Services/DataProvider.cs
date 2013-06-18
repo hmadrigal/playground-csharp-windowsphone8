@@ -136,7 +136,7 @@ namespace HomeWork2.Services
                             let indexLtChar = description.IndexOf("<")
                             select new NewsItem()
                              {
-                                 Description = description.Substring(0, indexLtChar < 0 ? description.Length : indexLtChar),
+                                 Description = description.Substring(0, indexLtChar < 0 ? description.Length : indexLtChar).Trim(),
                                  PubDate = (string)photoElement.Element("pubDate"),
                                  SourceLabel = (string)photoElement.Element("source"),
                                  SourceUrl = (string)photoElement.Element("source").Attribute("url"),

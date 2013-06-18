@@ -38,34 +38,34 @@
             </Border>
         </DataTemplate>
         <DataTemplate x:Key="NewsItemDataTemplate">
-        	<TextBlock TextWrapping="Wrap">
-        		<Run Text="{Binding Title}" />
-				<LineBreak />
-				<Run Text="{Binding PubDate}"/>
-				<LineBreak />
-				<Run Text="{Binding Description,StringFormat='\{0\} ...'}" />
-				<Run Text="{Binding SourceLabel,StringFormat='by \{0\}'}" />
-			</TextBlock>
+            <Button Margin="6,3" BorderBrush="{x:Null}" HorizontalContentAlignment="Left">
+                <TextBlock TextWrapping="Wrap" >
+        		        <Run Text="{Binding Title}" FontSize="{StaticResource PhoneFontSizeMedium}"  />
+				        <Run Text="{Binding PubDate,StringFormat=' - \{0\}'}" FontWeight="Bold" FontSize="{StaticResource PhoneFontSizeNormal}"/>
+                        <LineBreak />
+				        <Run Text="{Binding SourceLabel,StringFormat='by \{0\}'}" FontStyle="Italic"/>
+				        <LineBreak />
+				        <Run Text="{Binding Description,StringFormat='\{0\} '}" FontWeight="Bold" FontSize="{StaticResource PhoneFontSizeSmall}" />
+                </TextBlock>
+            </Button>
         </DataTemplate>
         <DataTemplate x:Key="WeatherForecastDataTemplate">
-        	<Grid>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="Auto" />
-							<ColumnDefinition Width="*" />
-						</Grid.ColumnDefinitions>
-						<Image Source="{Binding WeatherIconUrl}" />
-						<TextBlock Grid.Column="1">
-							<Run Text="{Binding ObservationTime,StringFormat='Observation Time: \{0\}'}" />
-							<LineBreak />
-							<Run Text="{Binding WeatherDesc,StringFormat='\{0\}'}" />
-							<LineBreak />
-							<Run Text="{Binding TempMinC,StringFormat='Min Temp: \{0\}c'}" />
-							<LineBreak />
-							<Run Text="{Binding TempMaxC,StringFormat='Max Temp: \{0\}c'}" />
-							<LineBreak />
-							<Run Text="{Binding WindspeedKmph,StringFormat='Wind Speed: \{0\}Kmph'}" />
-						</TextBlock>
-					</Grid>
+            <Button BorderBrush="{x:Null}" HorizontalContentAlignment="Stretch">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Image Margin="6" Source="{Binding WeatherIconUrl}" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                    <TextBlock Grid.Column="1" TextWrapping="Wrap">
+							    <Run Text="{Binding Date,StringFormat='Time: \{0\} '}" /><LineBreak />
+							    <Run Text="{Binding WeatherDesc,StringFormat='\{0\} '}" /><LineBreak />
+							    <Run Text="{Binding TempMinC,StringFormat='Min: \{0\}c '}" /><LineBreak />
+							    <Run Text="{Binding TempMaxC,StringFormat='Max: \{0\}c '}" /><LineBreak />
+							    <Run Text="{Binding WindspeedKmph,StringFormat='Wind: \{0\}Kmph '}" />
+                    </TextBlock>
+                </Grid>
+            </Button>
         </DataTemplate>
     </phone:PhoneApplicationPage.Resources>
     <phone:PhoneApplicationPage.DataContext>
@@ -103,56 +103,53 @@
         <!--ContentPanel - place additional content here-->
         <phone:Panorama Title="City Explorer">
             <phone:PanoramaItem Header="Photos">
-            	<phone:LongListSelector 
+                <phone:LongListSelector 
 					ItemsSource="{Binding Photos}" ItemTemplate="{StaticResource PhotoItemDataTemplate}" 
 				/>
 
             </phone:PanoramaItem>
             <phone:PanoramaItem Header="News">
-            	<phone:LongListSelector 
+                <phone:LongListSelector 
 					ItemsSource="{Binding News}" ItemTemplate="{StaticResource NewsItemDataTemplate}" 
 				/>
 
             </phone:PanoramaItem>
             <phone:PanoramaItem Header="Weather">
-				<Grid>
-					<Grid.RowDefinitions>
+                <Grid>
+                    <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
-						<RowDefinition Height="*" />
-					</Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
                     <TextBlock Text="NOW" />
                     <Grid Grid.Row="1" >
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="Auto" />
-							<ColumnDefinition Width="*" />
-						</Grid.ColumnDefinitions>
-						<Image Source="{Binding CurrentWeather.WeatherIconUrl}" />
-						<TextBlock Grid.Column="1">
-							<Run Text="{Binding CurrentWeather.Date,StringFormat='Date: \{0\}'}" />
-							<LineBreak />
-							<Run Text="{Binding CurrentWeather.WeatherDesc,StringFormat='\{0\}'}" />
-							<LineBreak />
-							<Run Text="{Binding CurrentWeather.TempMinC,StringFormat='Min Temp: \{0\}c'}" />
-							<LineBreak />
-							<Run Text="{Binding CurrentWeather.TempMaxC,StringFormat='Max Temp: \{0\}c'}" />
-							<LineBreak />
-							<Run Text="{Binding CurrentWeather.WindspeedKmph,StringFormat='Wind Speed: \{0\}Kmph'}" />
-						</TextBlock>
-					</Grid>
-					<Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Image Margin="6" Source="{Binding CurrentWeather.WeatherIconUrl}" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                        <TextBlock Grid.Column="1" TextWrapping="Wrap">
+							<Run Text="{Binding CurrentWeather.ObservationTime,StringFormat='Date: \{0\} '}" />
+							<Run Text="{Binding CurrentWeather.WeatherDesc,StringFormat='\{0\} '}" />
+							<Run Text="{Binding CurrentWeather.TempC,StringFormat='Temp: \{0\}c '}" />
+							<Run Text="{Binding CurrentWeather.Humidity,StringFormat='Humidity: \{0\} '}" />
+                            <Run Text="{Binding CurrentWeather.Pressure,StringFormat='Pressure: \{0\} '}" />
+							<Run Text="{Binding CurrentWeather.WindspeedKmph,StringFormat='Wind: \{0\}Kmph '}" />
+                        </TextBlock>
+                    </Grid>
+                    <Grid Grid.Row="2">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <TextBlock Text="UPCOMING" />
-						<phone:LongListSelector 
+                        <phone:LongListSelector 
                             Grid.Row="1"
                             ItemsSource="{Binding WeatherForecast}" 
                             ItemTemplate="{StaticResource WeatherForecastDataTemplate}" 
 						/>
-					</Grid>
-				</Grid>
+                    </Grid>
+                </Grid>
             </phone:PanoramaItem>
             <phone:PanoramaItem Header="Settings">
                 <Grid>
