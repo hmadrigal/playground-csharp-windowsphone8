@@ -112,8 +112,8 @@
     <Compile Include="..\HomeWork2.Phone.Shared\Services\DataProvider.cs">
       <Link>Services\DataProvider.cs</Link>
     </Compile>
-    <Compile Include="..\HomeWork2.Phone.Shared\Services\FileCacheManager.cs">
-      <Link>Services\FileCacheManager.cs</Link>
+    <Compile Include="..\HomeWork2.Phone.Shared\Services\FileManager.cs">
+      <Link>Services\FileManager.cs</Link>
     </Compile>
     <Compile Include="..\HomeWork2.Phone.Shared\ViewModels\BindableBase.cs">
       <Link>ViewModels\BindableBase.cs</Link>

@@ -11,7 +11,7 @@ namespace HomeWork2.Services
     {
         public async Task<Stream> GetContent(Uri uri)
         {
-            var cacheManager = FileCacheManager.Instance;
+            var cacheManager = FileManager.Instance;
             var fileKey = cacheManager.GetFileKey(uri.ToString());
             if (await cacheManager.HasExpired(fileKey))
             {

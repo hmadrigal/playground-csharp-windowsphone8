@@ -2,10 +2,11 @@
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.Storage.Streams;
 namespace HomeWork2.Services
 {
 
-    public sealed class FileCacheManager
+    public sealed class FileManager
     {
         private static readonly string CacheFolderName = @"CacheFolder";
         private Windows.Storage.IStorageFolder _localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
@@ -54,18 +55,33 @@ namespace HomeWork2.Services
             }
         }
 
+        public async Task SaveAsync<T>(string fileName, T instance, IObjectSerializer serializer)
+        {
+            var dataFolder = await _localFolder.CreateFolderAsync(CacheFolderName, CreationCollisionOption.OpenIfExists);
+            var targetFile = await dataFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+            serializer.Serialize<T>(await targetFile.OpenStreamForWriteAsync(), instance);
+        }
+
+        public async Task<T> LoadAsync<T>(string fileName, IObjectSerializer serializer)
+        {
+            var dataFolder = await _localFolder.CreateFolderAsync(CacheFolderName, CreationCollisionOption.OpenIfExists);
+            var targetFile = await dataFolder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
+            var instance = (T)serializer.Deserialize<T>(await targetFile.OpenStreamForReadAsync(), typeof(T));
+            return instance;
+        }
+
         private void InitializeCacheManager()
         {
 
         }
 
         #region Singleton Pattern w/ Constructor
-        private FileCacheManager()
+        private FileManager()
             : base()
         {
             InitializeCacheManager();
         }
-        public static FileCacheManager Instance
+        public static FileManager Instance
         {
             get
             {
@@ -75,7 +91,7 @@ namespace HomeWork2.Services
         private class SingletonCacheManagerCreator
         {
             private SingletonCacheManagerCreator() { }
-            public static FileCacheManager _Instance = new FileCacheManager();
+            public static FileManager _Instance = new FileManager();
         }
         #endregion
     }

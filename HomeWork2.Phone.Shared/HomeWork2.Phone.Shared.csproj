@@ -86,7 +86,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ContentAccessor.cs" />
     <Compile Include="Services\DataProvider.cs" />
-    <Compile Include="Services\FileCacheManager.cs" />
+    <Compile Include="Services\FileManager.cs" />
     <Compile Include="ViewModels\BindableBase.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
   </ItemGroup>

@@ -19,7 +19,7 @@
     <phone:PhoneApplicationPage.Resources>
         <HomeWork2ViewModels:MainPageViewModel x:Key="ViewModel" />
         <DataTemplate x:Key="SearchResultItemDataTemplate">
-            <Button Margin="6,3" HorizontalContentAlignment="Left" 
+            <Button Margin="9,6" HorizontalContentAlignment="Left" 
                     Command="{Binding DataContext.SelectCityCommand, ElementName=View,Mode=OneTime}"
                     CommandParameter="{Binding}"
             >
@@ -33,24 +33,31 @@
             </Button>
         </DataTemplate>
         <DataTemplate x:Key="PhotoItemDataTemplate">
-            <Border BorderBrush="{x:Null}">
-                <Image Source="{Binding SmallImageUrl,Mode=OneTime}" Stretch="None"  />
+            <Border Margin="9,6" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="{Binding Title}" TextWrapping="Wrap" />
+                    <Image HorizontalAlignment="Left"  Grid.Row="1" Source="{Binding SmallImageUrl,Mode=OneTime}" Stretch="None"  />
+                </Grid>
             </Border>
         </DataTemplate>
         <DataTemplate x:Key="NewsItemDataTemplate">
-            <Button Margin="6,3" BorderBrush="{x:Null}" HorizontalContentAlignment="Left">
+            <Border Margin="9,6" BorderBrush="{x:Null}" >
                 <TextBlock TextWrapping="Wrap" >
-        		        <Run Text="{Binding Title}" FontSize="{StaticResource PhoneFontSizeMedium}"  />
-				        <Run Text="{Binding PubDate,StringFormat=' - \{0\}'}" FontWeight="Bold" FontSize="{StaticResource PhoneFontSizeNormal}"/>
+        		        <Run Text="{Binding Title}" FontSize="{StaticResource PhoneFontSizeMedium}" FontWeight="Bold"  />
+				        <Run Text="{Binding PubDate,StringFormat=' - \{0\}'}" FontSize="{StaticResource PhoneFontSizeNormal}"/>
                         <LineBreak />
-				        <Run Text="{Binding SourceLabel,StringFormat='by \{0\}'}" FontStyle="Italic"/>
+				        <Run Text="{Binding SourceLabel,StringFormat='by \{0\}'}" FontStyle="Italic" FontSize="{StaticResource PhoneFontSizeNormal}"/>
 				        <LineBreak />
-				        <Run Text="{Binding Description,StringFormat='\{0\} '}" FontWeight="Bold" FontSize="{StaticResource PhoneFontSizeSmall}" />
+				        <Run Text="{Binding Description,StringFormat='\{0\} '}" FontSize="{StaticResource PhoneFontSizeSmall}" />
                 </TextBlock>
-            </Button>
+            </Border>
         </DataTemplate>
         <DataTemplate x:Key="WeatherForecastDataTemplate">
-            <Button BorderBrush="{x:Null}" HorizontalContentAlignment="Stretch">
+            <Border Margin="9,6" BorderBrush="{x:Null}" >
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -65,9 +72,10 @@
 							    <Run Text="{Binding WindspeedKmph,StringFormat='Wind: \{0\}Kmph '}" />
                     </TextBlock>
                 </Grid>
-            </Button>
+            </Border>
         </DataTemplate>
     </phone:PhoneApplicationPage.Resources>
+    
     <phone:PhoneApplicationPage.DataContext>
         <Binding Source="{StaticResource ViewModel}" />
     </phone:PhoneApplicationPage.DataContext>
@@ -122,21 +130,24 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <TextBlock Text="NOW" />
-                    <Grid Grid.Row="1" >
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Image Margin="6" Source="{Binding CurrentWeather.WeatherIconUrl}" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top" />
-                        <TextBlock Grid.Column="1" TextWrapping="Wrap">
+                    <Border Margin="9,6" Grid.Row="1">
+                        <Grid >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Image Margin="6" Source="{Binding CurrentWeather.WeatherIconUrl}" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                            <TextBlock Grid.Column="1" TextWrapping="Wrap">
 							<Run Text="{Binding CurrentWeather.ObservationTime,StringFormat='Date: \{0\} '}" />
 							<Run Text="{Binding CurrentWeather.WeatherDesc,StringFormat='\{0\} '}" />
 							<Run Text="{Binding CurrentWeather.TempC,StringFormat='Temp: \{0\}c '}" />
 							<Run Text="{Binding CurrentWeather.Humidity,StringFormat='Humidity: \{0\} '}" />
                             <Run Text="{Binding CurrentWeather.Pressure,StringFormat='Pressure: \{0\} '}" />
 							<Run Text="{Binding CurrentWeather.WindspeedKmph,StringFormat='Wind: \{0\}Kmph '}" />
-                        </TextBlock>
-                    </Grid>
+                            </TextBlock>
+                        </Grid>
+                    </Border>
+
                     <Grid Grid.Row="2">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
