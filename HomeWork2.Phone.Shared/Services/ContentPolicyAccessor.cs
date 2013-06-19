@@ -21,29 +21,29 @@ namespace HomeWork2.Services
             return hashedValue.ToString();
         }
 
-        public virtual bool IsExpired<T>(T state = default(T))
+        public virtual bool IsValid<T>(T state = default(T))
         {
             var key = GetFileKey(state);
-            return !FileExists(key);
+            return FileExists(key);
         }
 
         protected bool FileExists(string fileName)
         {
-            var dataFolderTask = Windows.Storage.ApplicationData.Current.LocalFolder.CreateFolderAsync(FileManager.CacheFolderName, CreationCollisionOption.OpenIfExists).AsTask();
-            dataFolderTask.Wait();
-            var dataFolder = dataFolderTask.Result;
-            var isThereFile = false;
+            var isThereFile = false;           
             try
             {
+                var dataFolderTask = Windows.Storage.ApplicationData.Current.LocalFolder.CreateFolderAsync(FileManager.CacheFolderName, CreationCollisionOption.OpenIfExists).AsTask();
+                dataFolderTask.Wait();
+                var dataFolder = dataFolderTask.Result;
                 var getFileTask = dataFolder.GetFileAsync(fileName).AsTask();
                 getFileTask.Wait();
                 isThereFile = getFileTask.Exception == null;
             }
-            catch (AggregateException e)
+            catch 
             {
                 isThereFile = false;
             }
-            return !isThereFile;
+            return isThereFile;
         }
     }
 
@@ -85,16 +85,17 @@ namespace HomeWork2.Services
             _awaitTimeSpanTable[key] = awaitTimeSpan;
         }
 
-        public override bool IsExpired<T>(T state = default(T))
+        public override bool IsValid<T>(T state = default(T))
         {
-            var fileName = GetFileKey(state);
-            var dataFolderTask = Windows.Storage.ApplicationData.Current.LocalFolder.CreateFolderAsync(FileManager.CacheFolderName, CreationCollisionOption.OpenIfExists).AsTask();
-            dataFolderTask.Wait();
-            var dataFolder = dataFolderTask.Result;
             var isThereFile = false;
-            var hasExpired = false;
+            var hasExpired = false;            
             try
             {
+                var fileName = GetFileKey(state);
+                var dataFolderTask = Windows.Storage.ApplicationData.Current.LocalFolder.CreateFolderAsync(FileManager.CacheFolderName, CreationCollisionOption.OpenIfExists).AsTask();
+                dataFolderTask.Wait();
+                var dataFolder = dataFolderTask.Result;
+
                 var getFileTask = dataFolder.GetFileAsync(fileName).AsTask();
                 getFileTask.Wait();
                 isThereFile = getFileTask.Exception == null;
@@ -108,7 +109,7 @@ namespace HomeWork2.Services
                     deleteFileTask.Wait();
                 }
             }
-            catch (System.IO.FileNotFoundException)
+            catch 
             {
                 isThereFile = false;
                 hasExpired = false;

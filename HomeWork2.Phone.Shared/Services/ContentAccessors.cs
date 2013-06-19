@@ -13,7 +13,7 @@ namespace HomeWork2.Services
         {
             var cacheManager = FileManager.Instance;
             var fileKey = contentPolicyAccessor.GetFileKey(uri);
-            if (contentPolicyAccessor.IsExpired(uri))
+            if (!contentPolicyAccessor.IsValid(uri))
             {
                 var inputStream = await GetWebStream(uri);
                 await cacheManager.SaveAsync(fileKey, inputStream);

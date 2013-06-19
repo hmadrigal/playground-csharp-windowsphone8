@@ -7,7 +7,7 @@ namespace HomeWork2.Services
 {
     public interface IContentPolicyAccessor
     {
-        bool IsExpired<T>(T state = default(T));
+        bool IsValid<T>(T state = default(T));
         string GetFileKey<T>(T state = default(T));
     }    
 }
