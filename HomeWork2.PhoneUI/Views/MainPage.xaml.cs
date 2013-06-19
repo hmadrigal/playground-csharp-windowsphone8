@@ -14,12 +14,13 @@ namespace HomeWork2.Views
     public partial class MainPage : PhoneApplicationPage
     {
 
-        private HomeWork2.ViewModels.MainPageViewModel _viewModel;
 
         public HomeWork2.ViewModels.MainPageViewModel ViewModel
         {
             get { return _viewModel ?? (_viewModel = DataContext as HomeWork2.ViewModels.MainPageViewModel); }
         }
+        private HomeWork2.ViewModels.MainPageViewModel _viewModel;
+
 
         // Constructor
         public MainPage()

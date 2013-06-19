@@ -21,9 +21,26 @@ namespace HomeWork2.WinStoreUI
     /// </summary>
     public sealed partial class MainPage : Page
     {
+
+        public HomeWork2.ViewModels.MainPageViewModel ViewModel
+        {
+            get { return _viewModel ?? (_viewModel = DataContext as HomeWork2.ViewModels.MainPageViewModel); }
+        }
+        private HomeWork2.ViewModels.MainPageViewModel _viewModel;
+
         public MainPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
+            Loaded += OnMainPageLoaded;
+        }
+
+        private void OnMainPageLoaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= OnMainPageLoaded;
+            if (ViewModel.ViewLoadedCommand.CanExecute(null))
+            {
+                ViewModel.ViewLoadedCommand.Execute(null);
+            }
         }
 
         /// <summary>

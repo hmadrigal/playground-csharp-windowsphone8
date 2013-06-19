@@ -1,13 +1,111 @@
 ﻿<Page
+    x:Name="View"
     x:Class="HomeWork2.WinStoreUI.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:HomeWork2.WinStoreUI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:HomeWork2ViewModels="using:HomeWork2.ViewModels"
     mc:Ignorable="d">
+    <Page.Resources>
+        <HomeWork2ViewModels:MainPageViewModel x:Key="ViewModel" />
+        <DataTemplate x:Key="SearchResultItemDataTemplate">
+            <Button Margin="9,6" HorizontalContentAlignment="Left" 
+                    Command="{Binding DataContext.SelectCityCommand, ElementName=View,Mode=OneTime}"
+                    CommandParameter="{Binding}"
+            >
+                <TextBlock TextWrapping="Wrap">
+                        <Run Text="{Binding Country}"/>
+                        <Run Text="  "/>
+                        <Run Text="{Binding Region}"/>
+                        <Run Text="  "/>
+                        <Run Text="{Binding AreaName}"/>
+                </TextBlock>
+            </Button>
+        </DataTemplate>
+        <DataTemplate x:Key="PhotoItemDataTemplate">
+            <Border Margin="9,6" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="{Binding Title}" TextWrapping="Wrap" />
+                    <Image HorizontalAlignment="Left"  Grid.Row="1" Source="{Binding SmallImageUrl,Mode=OneTime}" Stretch="None"  />
+                </Grid>
+            </Border>
+        </DataTemplate>
+        <DataTemplate x:Key="NewsItemDataTemplate">
+            <Border Margin="9,6" BorderBrush="{x:Null}" >
+                <TextBlock TextWrapping="Wrap" >
+        		        <Run Text="{Binding Title}"  FontWeight="Bold"  />
+				        <Run Text="{Binding PubDate}" />
+                        <LineBreak />
+				        <Run Text="{Binding SourceLabel}" FontStyle="Italic" />
+				        <LineBreak />
+				        <Run Text="{Binding Description}"  />
+                </TextBlock>
+            </Border>
+        </DataTemplate>
+        <DataTemplate x:Key="WeatherForecastDataTemplate">
+            <Border Margin="9,6" BorderBrush="{x:Null}" >
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Image Margin="6" Source="{Binding WeatherIconUrl}" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                    <TextBlock Grid.Column="1" TextWrapping="Wrap">
+							<Run Text="Time: "/><Run Text="{Binding Date}" /><LineBreak />
+							<Run Text="Desc: "/><Run Text="{Binding WeatherDesc}" /><LineBreak />
+							<Run Text="Min: "/><Run Text="{Binding TempMinC}" /><LineBreak />
+							<Run Text="Max: "/><Run Text="{Binding TempMaxC}" /><LineBreak />
+							<Run Text="Wind: "/><Run Text="{Binding WindspeedKmph}" />
+                            <Run Text="Kmph"/>
+                    </TextBlock>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Page.DataContext>
+        <Binding Source="{StaticResource ViewModel}" />
+    </Page.DataContext>
 
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Photos" VerticalAlignment="Top" />
+            <ListBox Grid.Row="1" ItemsSource="{Binding Photos}" ItemTemplate="{StaticResource PhotoItemDataTemplate}"  />
 
+            <TextBlock Grid.Column="1" Text="News" VerticalAlignment="Top" />
+            <ListBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding News}" ItemTemplate="{StaticResource NewsItemDataTemplate}" />
+
+            <TextBlock Grid.Column="2" Text="Weather" VerticalAlignment="Top" />
+            <ListBox Grid.Row="1" Grid.Column="2" ItemsSource="{Binding WeatherForecast}"  ItemTemplate="{StaticResource WeatherForecastDataTemplate}"  />
+
+            <TextBlock Grid.Column="3" Text="Settings" VerticalAlignment="Top" />
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBox Text="{Binding CityName,Mode=TwoWay}" />
+                <Button Grid.Row="1"  Command="{Binding SearchCityCommand,Mode=OneTime}" CommandParameter="{Binding CityName}" />
+                <ListBox Grid.Row="2" Grid.RowSpan="4" Grid.Column="3" ItemsSource="{Binding SearchResults}" ItemTemplate="{StaticResource SearchResultItemDataTemplate}" />
+            </Grid>
+            
+        </Grid>
     </Grid>
 </Page>

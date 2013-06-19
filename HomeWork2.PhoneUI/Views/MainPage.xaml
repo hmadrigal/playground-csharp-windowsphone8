@@ -156,8 +156,7 @@
                         <TextBlock Text="UPCOMING" />
                         <phone:LongListSelector 
                             Grid.Row="1"
-                            ItemsSource="{Binding WeatherForecast}" 
-                            ItemTemplate="{StaticResource WeatherForecastDataTemplate}" 
+                            ItemsSource="{Binding WeatherForecast}"  ItemTemplate="{StaticResource WeatherForecastDataTemplate}" 
 						/>
                     </Grid>
                 </Grid>
@@ -179,7 +178,7 @@
                             Command="{Binding SearchCityCommand,Mode=OneTime}"
                             CommandParameter="{Binding CityName}"
                             />
-                    <phone:LongListSelector Grid.Row="2" Grid.ColumnSpan="2" ItemsSource="{Binding SearchResults,Mode=OneTime}" ItemTemplate="{StaticResource SearchResultItemDataTemplate}"/>
+                    <phone:LongListSelector Grid.Row="2" Grid.ColumnSpan="2" ItemsSource="{Binding SearchResults}" ItemTemplate="{StaticResource SearchResultItemDataTemplate}"/>
                 </Grid>
             </phone:PanoramaItem>
         </phone:Panorama>

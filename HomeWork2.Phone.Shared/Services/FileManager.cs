@@ -44,7 +44,14 @@ namespace HomeWork2.Services
             T instance = default(T);
             using (var inputStream = await targetFile.OpenStreamForReadAsync())
             {
-                instance = (T)serializer.Deserialize<T>(inputStream, typeof(T));
+                try
+                {
+                    instance = (T)serializer.Deserialize<T>(inputStream, typeof(T));
+                }
+                catch 
+                {
+                    instance = default(T);
+                }
             }
             return instance;
         }
