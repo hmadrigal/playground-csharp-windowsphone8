@@ -127,5 +127,7 @@
                 </Grid>
             </Grid>
         </FlipView>
+
+        <ProgressBar VerticalAlignment="Top" IsIndeterminate="{Binding IsLoading}" />
     </Grid>
 </Page>
