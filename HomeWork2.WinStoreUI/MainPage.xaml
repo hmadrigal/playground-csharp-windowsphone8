@@ -11,7 +11,7 @@
     <Page.Resources>
         <HomeWork2ViewModels:MainPageViewModel x:Key="ViewModel" />
         <DataTemplate x:Key="SearchResultItemDataTemplate">
-            <Button Margin="9,6" HorizontalContentAlignment="Left" 
+            <Button Margin="84,42" HorizontalContentAlignment="Left" 
                     Command="{Binding DataContext.SelectCityCommand, ElementName=View,Mode=OneTime}"
                     CommandParameter="{Binding}"
             >
@@ -25,7 +25,7 @@
             </Button>
         </DataTemplate>
         <DataTemplate x:Key="PhotoItemDataTemplate">
-            <Border Margin="9,6" >
+            <Border Margin="84,42" >
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -37,7 +37,7 @@
             </Border>
         </DataTemplate>
         <DataTemplate x:Key="NewsItemDataTemplate">
-            <Border Margin="9,6" BorderBrush="{x:Null}" >
+            <Border Margin="84,42" BorderBrush="{x:Null}" >
                 <TextBlock TextWrapping="Wrap" >
         		        <Run Text="{Binding Title}"  FontWeight="Bold"  />
 				        <Run Text="{Binding PubDate}" />
@@ -49,7 +49,7 @@
             </Border>
         </DataTemplate>
         <DataTemplate x:Key="WeatherForecastDataTemplate">
-            <Border Margin="9,6" BorderBrush="{x:Null}" >
+            <Border Margin="84,42" BorderBrush="{x:Null}" >
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -74,38 +74,58 @@
     </Page.DataContext>
 
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <TextBlock Text="Photos" VerticalAlignment="Top" />
-            <ListBox Grid.Row="1" ItemsSource="{Binding Photos}" ItemTemplate="{StaticResource PhotoItemDataTemplate}"  />
-
-            <TextBlock Grid.Column="1" Text="News" VerticalAlignment="Top" />
-            <ListBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding News}" ItemTemplate="{StaticResource NewsItemDataTemplate}" />
-
-            <TextBlock Grid.Column="2" Text="Weather" VerticalAlignment="Top" />
-            <ListBox Grid.Row="1" Grid.Column="2" ItemsSource="{Binding WeatherForecast}"  ItemTemplate="{StaticResource WeatherForecastDataTemplate}"  />
-
-            <TextBlock Grid.Column="3" Text="Settings" VerticalAlignment="Top" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBlock Text="{Binding Title}" VerticalAlignment="Top" FontWeight="ExtraBold"  FontSize="42" TextAlignment="Center"/>
+        <FlipView Grid.Row="1" Margin="24,12">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <TextBox Text="{Binding CityName,Mode=TwoWay}" />
-                <Button Grid.Row="1"  Command="{Binding SearchCityCommand,Mode=OneTime}" CommandParameter="{Binding CityName}" />
-                <ListBox Grid.Row="2" Grid.RowSpan="4" Grid.Column="3" ItemsSource="{Binding SearchResults}" ItemTemplate="{StaticResource SearchResultItemDataTemplate}" />
+                <TextBlock Text="Photos" VerticalAlignment="Top" FontWeight="Bold"  FontSize="36"/>
+                <ListBox Grid.Row="1" ItemsSource="{Binding Photos}" ItemTemplate="{StaticResource PhotoItemDataTemplate}"  />
             </Grid>
-            
-        </Grid>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="1" Text="News" VerticalAlignment="Top" FontWeight="Bold"  FontSize="36"/>
+                <ListBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding News}" ItemTemplate="{StaticResource NewsItemDataTemplate}" />
+            </Grid>
+
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="2" Text="Weather" VerticalAlignment="Top" FontWeight="Bold"  FontSize="36"/>
+                <ListBox Grid.Row="1" Grid.Column="2" ItemsSource="{Binding WeatherForecast}"  ItemTemplate="{StaticResource WeatherForecastDataTemplate}"  />
+            </Grid>
+
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Settings" VerticalAlignment="Top" FontWeight="Bold"  FontSize="36"/>
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <TextBox Text="{Binding CityName,Mode=TwoWay}" />
+                    <Button Grid.Row="1" Content="Search"  Command="{Binding SearchCityCommand,Mode=OneTime}" CommandParameter="{Binding CityName}" />
+                    <ListBox Grid.Row="2" Grid.RowSpan="4" Grid.Column="3" ItemsSource="{Binding SearchResults}" ItemTemplate="{StaticResource SearchResultItemDataTemplate}" />
+                </Grid>
+            </Grid>
+        </FlipView>
     </Grid>
 </Page>
