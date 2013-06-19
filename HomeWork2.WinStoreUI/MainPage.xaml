@@ -102,10 +102,35 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Column="2" Text="Weather" VerticalAlignment="Top" FontWeight="Bold"  FontSize="36"/>
-                <ListBox Grid.Row="1" Grid.Column="2" ItemsSource="{Binding WeatherForecast}"  ItemTemplate="{StaticResource WeatherForecastDataTemplate}"  />
+                <TextBlock Grid.Row="1"  Text="NOW" />
+                <Border Grid.Row="2"  Margin="24,12" >
+                    <Grid >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Image Margin="6" Source="{Binding CurrentWeather.WeatherIconUrl}" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                        <TextBlock Grid.Column="1" TextWrapping="Wrap">
+							<Run Text="Date: "/><Run Text="{Binding CurrentWeather.ObservationTime}" />
+							<Run Text="Desc:"/><Run Text="{Binding CurrentWeather.WeatherDesc}" />
+							<Run Text="Temp: "/><Run Text="{Binding CurrentWeather.TempC}" />
+							<Run Text="c Humidity: "/><Run Text="{Binding CurrentWeather.Humidity}" />
+                            <Run Text="Pressure: "/><Run Text="{Binding CurrentWeather.Pressure}" />
+							<Run Text="Wind: "/><Run Text="{Binding CurrentWeather.WindspeedKmph}" />
+                            <Run Text="Kmph "/>
+                        </TextBlock>
+                    </Grid>
+                </Border>
+
+                <TextBlock Grid.Row="3"  Text="FORECAST" />
+                <ListBox Grid.Row="4" Grid.Column="2" ItemsSource="{Binding WeatherForecast}"  ItemTemplate="{StaticResource WeatherForecastDataTemplate}"  />
             </Grid>
 
 
