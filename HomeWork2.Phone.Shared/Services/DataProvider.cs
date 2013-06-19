@@ -87,9 +87,9 @@ namespace HomeWork2.Services
             return new Tuple<WeatherCurrentItem, IEnumerable<WeatheForecastItem>>(current, forecastQuery);
         }
 
-        public async Task<IEnumerable<PhotoItem>> GetPhotos(double latitude, double longitude)
+        public async Task<IEnumerable<PhotoItem>> GetPhotos(string queryTerm)
         {
-            var uri = new Uri(string.Format(@"http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key={0}&lat={1}&lon={2}&format=rest", ApiKeyFlickrCityExplorer, latitude, longitude));
+            var uri = new Uri(string.Format(@"http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key={0}&text={1}&format=rest", ApiKeyFlickrCityExplorer, queryTerm));
             LifeTimePolicyAccessor.Instance.SetTimeToLive(uri, TimeSpan.FromMinutes(30));
             var contentStream = await ContentAccessors.Instance.GetContent(uri, LifeTimePolicyAccessor.Instance);
             XDocument document;

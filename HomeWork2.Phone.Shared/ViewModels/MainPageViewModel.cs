@@ -121,7 +121,7 @@ namespace HomeWork2.ViewModels
             WeatherForecast.Clear();
             CurrentWeather = null;
 
-            var photoResult = await DataProvider.Instance.GetPhotos(SelectedCity.Latitude, SelectedCity.Longitude);
+            var photoResult = await DataProvider.Instance.GetPhotos(string.Concat(SelectedCity.AreaName, " ", SelectedCity.Country));
             foreach (var item in photoResult)
             {
                 Photos.Add(item);
