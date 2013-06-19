@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="7b51907c-af1b-4daa-a111-764abd9eb57d" Publisher="CN=herberthm" Version="1.0.0.0" />
+  <Identity Name="7b51907c-af1b-4daa-a111-764abd9eb57d" Publisher="CN=herberthm" Version="1.0.0.2" />
   <Properties>
     <DisplayName>HomeWork2.WinStoreUI</DisplayName>
     <PublisherDisplayName>Herberth</PublisherDisplayName>
