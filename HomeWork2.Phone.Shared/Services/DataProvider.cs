@@ -87,7 +87,7 @@ namespace HomeWork2.Services
             return new Tuple<WeatherCurrentItem, IEnumerable<WeatheForecastItem>>(current, forecastQuery);
         }
 
-        public async Task<IEnumerable<PhotoItem>> GetPhotos(string queryTerm)
+        public async Task<IEnumerable<PhotoItem>> GetPhotos(string queryTerm, Func<Stream, object> GetBitmapSource = null)
         {
             var uri = new Uri(string.Format(@"http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key={0}&text={1}&format=rest", ApiKeyFlickrCityExplorer, queryTerm));
             LifeTimePolicyAccessor.Instance.SetTimeToLive(uri, TimeSpan.FromMinutes(30));
@@ -97,12 +97,14 @@ namespace HomeWork2.Services
             {
                 document = XDocument.Load(reader);
             }
-            var photoQuery = from photoElement in document.Root.Element("photos").Elements("photo")
-                             let farm = (string)photoElement.Attribute("farm")
-                             let server = (string)photoElement.Attribute("server")
-                             let id = (string)photoElement.Attribute("id")
-                             let secret = (string)photoElement.Attribute("secret")
-                             select new PhotoItem()
+            List<PhotoItem> photoItems = new List<PhotoItem>();
+            foreach (var photoElement in document.Root.Element("photos").Elements("photo"))
+            {
+                var farm = (string)photoElement.Attribute("farm");
+                var server = (string)photoElement.Attribute("server");
+                var id = (string)photoElement.Attribute("id");
+                var secret = (string)photoElement.Attribute("secret");
+                photoItems.Add(new PhotoItem()
                              {
                                  Id = id,
                                  Owner = (string)photoElement.Attribute("owner"),
@@ -113,15 +115,33 @@ namespace HomeWork2.Services
                                  Ispublic = (string)photoElement.Attribute("ispublic"),
                                  Isfriend = (string)photoElement.Attribute("isfriend"),
                                  Isfamily = (string)photoElement.Attribute("isfamily"),
-                                 SmallImageUrl = string.Format(@"http://farm{0}.staticflickr.com/{1}/{2}_{3}_m.jpg",
-                                     farm,//farm-id
-                                     server,//server-id
-                                     id,//id
-                                     secret//secret
-                                 ),
-                             };
+                                 SmallImage = await GetImage(farm, server, id, secret, GetBitmapSource),
+                             });
+            }
 
-            return photoQuery;
+            return photoItems;
+        }
+
+        private async static Task<object> GetImage(string farm, string server, string id, string secret, Func<Stream, object> GetBitmapSource = null)
+        {
+            var url = string.Format(@"http://farm{0}.staticflickr.com/{1}/{2}_{3}_m.jpg",
+                                                 farm,//farm-id
+                                                 server,//server-id
+                                                 id,//id
+                                                 secret//secret
+                                             );
+
+            object bitmapSource = null;
+            if (bitmapSource == null)
+            {
+                bitmapSource = url;
+            }
+            else
+            {
+                var contentStream = await ContentAccessors.Instance.GetContent(new Uri(url), KeepStoredPolicyAccessor.Instance);
+                bitmapSource = GetBitmapSource(contentStream);
+            }
+            return bitmapSource;
         }
 
         public async Task<IEnumerable<NewsItem>> GetNews(string query)

@@ -40,7 +40,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <TextBlock Text="{Binding Title}" TextWrapping="Wrap" />
-                    <Image HorizontalAlignment="Left"  Grid.Row="1" Source="{Binding SmallImageUrl,Mode=OneTime}" Stretch="None"  />
+                    <Image HorizontalAlignment="Left"  Grid.Row="1" Source="{Binding SmallImage,Mode=OneTime}" Stretch="None"  />
                 </Grid>
             </Border>
         </DataTemplate>

@@ -17,6 +17,6 @@ namespace HomeWork2.Models
         public string Isfriend { get; set; }
         public string Isfamily { get; set; }
 
-        public string SmallImageUrl { get; set; }
+        public object SmallImage { get; set; }
     }
 }
