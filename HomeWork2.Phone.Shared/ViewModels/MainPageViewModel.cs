@@ -10,7 +10,7 @@ using System.Windows.Input;
 
 namespace HomeWork2.ViewModels
 {
-    public class MainPageViewModel : BindableBase
+    public partial class MainPageViewModel : BindableBase
     {
         #region Title (INotifyPropertyChanged Property)
         public string Title
@@ -121,24 +121,6 @@ namespace HomeWork2.ViewModels
             WeatherForecast.Clear();
             CurrentWeather = null;
 
-#if WINDOWS_PHONE
-            Func<System.IO.Stream, System.Windows.Media.Imaging.BitmapImage> GetBitmapSource = (stream) =>
-            {
-                System.Windows.Media.Imaging.BitmapImage bitmapSource = new System.Windows.Media.Imaging.BitmapImage();
-                bitmapSource.SetSource(stream);
-                return bitmapSource;
-            };
-#endif
-#if NETFX_CORE
-            Func<System.IO.Stream, Windows.UI.Xaml.Media.Imaging.BitmapImage> GetBitmapSource = (stream) =>
-            {
-                Windows.UI.Xaml.Media.Imaging.BitmapImage bitmapSource = new Windows.UI.Xaml.Media.Imaging.BitmapImage();
-                Windows.Storage.Streams.InMemoryRandomAccessStream ras = new Windows.Storage.Streams.InMemoryRandomAccessStream();
-                stream.CopyTo(System.IO.WindowsRuntimeStreamExtensions.AsStreamForRead(ras));
-                bitmapSource.SetSource(ras);
-                return bitmapSource;
-            };
-#endif
             var photoResult = await DataProvider.Instance.GetPhotos(string.Concat(SelectedCity.AreaName, " ", SelectedCity.Country), GetBitmapSource);
             foreach (var item in photoResult)
             {
