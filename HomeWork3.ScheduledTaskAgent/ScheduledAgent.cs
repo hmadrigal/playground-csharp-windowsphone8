@@ -40,7 +40,6 @@ namespace HomeWork3
         protected override void OnInvoke(ScheduledTask task)
         {
             //TODO: Add code to perform your task in background
-
             NotifyComplete();
         }
     }
