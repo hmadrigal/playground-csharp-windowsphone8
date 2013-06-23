@@ -88,6 +88,7 @@
     <Compile Include="Services\ContentPolicyAccessor.cs" />
     <Compile Include="Services\DataProvider.cs" />
     <Compile Include="Services\FileManager.cs" />
+    <Compile Include="Services\LocalStorageSettings.cs" />
     <Compile Include="ViewModels\BindableBase.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.Phone.cs" />

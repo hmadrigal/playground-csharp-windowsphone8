@@ -4,14 +4,25 @@
   <App xmlns="" ProductID="{00f8f6fb-da15-49fe-b1a6-fc5fbf38366b}" Title="HomeWork3.ScreenPhoto" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="HomeWork3.ScreenPhoto author" Description="Sample description" Publisher="HomeWork3.ScreenPhoto" PublisherID="{8ae9bf73-9cd4-44aa-b506-ed8969121930}">
     <IconPath IsRelative="true" IsResource="false">Assets\ApplicationIcon.png</IconPath>
     <Capabilities>
+      <Capability Name="ID_CAP_GAMERSERVICES" />
+      <Capability Name="ID_CAP_IDENTITY_DEVICE" />
+      <Capability Name="ID_CAP_IDENTITY_USER" />
+      <Capability Name="ID_CAP_LOCATION" />
+      <Capability Name="ID_CAP_MICROPHONE" />
       <Capability Name="ID_CAP_NETWORKING" />
-      <Capability Name="ID_CAP_MEDIALIB_AUDIO" />
-      <Capability Name="ID_CAP_MEDIALIB_PLAYBACK" />
+      <Capability Name="ID_CAP_PHONEDIALER" />
+      <Capability Name="ID_CAP_PUSH_NOTIFICATION" />
       <Capability Name="ID_CAP_SENSORS" />
       <Capability Name="ID_CAP_WEBBROWSERCOMPONENT" />
+      <Capability Name="ID_CAP_ISV_CAMERA" />
+      <Capability Name="ID_CAP_CONTACTS" />
+      <Capability Name="ID_CAP_APPOINTMENTS" />
     </Capabilities>
     <Tasks>
       <DefaultTask Name="_default" NavigationPage="MainPage.xaml" />
+      <ExtendedTask Name="BackgroundTask">
+        <BackgroundServiceAgent Specifier="ScheduledTaskAgent" Name="CycleTileScheduledAgent" Source="HomeWork3ScheduledTasks" Type="HomeWork3ScheduledTasks.CycleTileScheduledAgent" />
+      </ExtendedTask>
     </Tasks>
     <Tokens>
       <PrimaryToken TokenID="HomeWork3.ScreenPhotoToken" TaskName="_default">

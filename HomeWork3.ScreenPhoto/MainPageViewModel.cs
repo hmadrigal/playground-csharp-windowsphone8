@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Phone.Shell;
+using HomeWork3ScheduledTasks;
 
 namespace HomeWork3
 {
@@ -18,8 +19,8 @@ namespace HomeWork3
 
         public string Topic
         {
-            get { return IsolatedStorageSettings.ApplicationSettings[ScheduledAgent.TopicKeyName] as string; }
-            set { IsolatedStorageSettings.ApplicationSettings[ScheduledAgent.TopicKeyName] = value; }
+            get { return LocalStorageSettings.ApplicationSettings[CycleTileScheduledAgent.TopicKeyName] as string; }
+            set { LocalStorageSettings.ApplicationSettings[CycleTileScheduledAgent.TopicKeyName] = value; }
         }
 
         public ObservableCollection<PhotoItem> Photos { get; private set; }
@@ -33,9 +34,9 @@ namespace HomeWork3
             Photos = new ObservableCollection<PhotoItem>();
             LoadCommand = new RelayCommand(OnLoadCommandInvoked);
             NavigateToConfigCommand = new RelayCommand(OnNavigateToConfigCommandInvoked);
-            if (!IsolatedStorageSettings.ApplicationSettings.Contains(ScheduledAgent.TopicKeyName))
+            if (!LocalStorageSettings.ApplicationSettings.Contains(CycleTileScheduledAgent.TopicKeyName))
             {
-                IsolatedStorageSettings.ApplicationSettings[ScheduledAgent.TopicKeyName] = "Costa Rica";
+                LocalStorageSettings.ApplicationSettings[CycleTileScheduledAgent.TopicKeyName] = "Costa Rica";
             }
         }
 

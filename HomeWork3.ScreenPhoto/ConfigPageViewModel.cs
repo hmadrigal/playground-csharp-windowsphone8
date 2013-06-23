@@ -2,6 +2,7 @@
 using HomeWork2.Models;
 using HomeWork2.Services;
 using HomeWork2.ViewModels;
+using HomeWork3ScheduledTasks;
 using System.Collections.ObjectModel;
 using System.IO.IsolatedStorage;
 using System.Threading.Tasks;
@@ -14,8 +15,11 @@ namespace HomeWork3
 
         public string Topic
         {
-            get { return IsolatedStorageSettings.ApplicationSettings[ScheduledAgent.TopicKeyName] as string; }
-            set { IsolatedStorageSettings.ApplicationSettings[ScheduledAgent.TopicKeyName] = value; }
+            get { return LocalStorageSettings.ApplicationSettings[CycleTileScheduledAgent.TopicKeyName] as string; }
+            set {
+                LocalStorageSettings.ApplicationSettings[CycleTileScheduledAgent.TopicKeyName] = value;
+                LocalStorageSettings.ApplicationSettings.Save();
+            }
         }
 
         public ObservableCollection<PhotoItem> Photos { get; private set; }

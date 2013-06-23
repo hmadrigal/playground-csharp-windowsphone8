@@ -70,9 +70,11 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Button Content="Set Topic" Command="{Binding NavigateToConfigCommand,Mode=OneTime}" />
             <phone:LongListSelector Grid.Row="1" ItemsSource="{Binding Photos}" ItemTemplate="{StaticResource PhotoItemDataTemplate}" />
+            <Button Grid.Row="2" x:Name="StartBackgroundWork" Content="Start Background Work" Click="OnStartBackgroundWorkClicked" />
         </Grid>
 
         <!--Uncomment to see an alignment grid to help ensure your controls are

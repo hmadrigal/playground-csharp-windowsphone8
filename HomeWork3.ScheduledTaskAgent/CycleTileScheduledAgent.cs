@@ -9,15 +9,19 @@ using System.Threading.Tasks;
 using HomeWork2.Models;
 using System.Linq;
 using System.IO.IsolatedStorage;
+using HomeWork3;
 
-namespace HomeWork3
+namespace HomeWork3ScheduledTasks
 {
-    public class ScheduledAgent : ScheduledTaskAgent
+    public class CycleTileScheduledAgent : ScheduledTaskAgent
     {
         public string Topic
         {
-            get { return IsolatedStorageSettings.ApplicationSettings[TopicKeyName] as string; }
-            set { IsolatedStorageSettings.ApplicationSettings[TopicKeyName] = value; }
+            get { return LocalStorageSettings.ApplicationSettings[TopicKeyName] as string; }
+            set {
+                LocalStorageSettings.ApplicationSettings[TopicKeyName] = value;
+                LocalStorageSettings.ApplicationSettings.Save().Wait();
+            }
         }
         
         public const string TopicKeyName = @"topic";
@@ -26,7 +30,7 @@ namespace HomeWork3
         /// <remarks>
         /// ScheduledAgent constructor, initializes the UnhandledException handler
         /// </remarks>
-        static ScheduledAgent()
+        static CycleTileScheduledAgent()
         {
             // Subscribe to the managed exception handler
             Deployment.Current.Dispatcher.BeginInvoke(delegate
@@ -56,12 +60,12 @@ namespace HomeWork3
         /// </remarks>
         protected async override void OnInvoke(ScheduledTask task)
         {
-            try
-            {
+            //try
+            //{
                 await UpdateCycleTilesAsync();
-            }
-            catch (Exception ex)
-            { }
+            //}
+            //catch (Exception ex)
+            //{ }
             //TODO: Add code to perform your task in background
             NotifyComplete();
         }
