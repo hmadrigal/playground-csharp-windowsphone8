@@ -96,10 +96,12 @@
     <Compile Include="ConfigPage.xaml.cs">
       <DependentUpon>ConfigPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ConfigPageViewModel.cs" />
     <Compile Include="LocalizedStrings.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MainPageViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\AppResources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -155,6 +157,14 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\HomeWork2.Phone.Shared\HomeWork2.Phone.Shared.csproj">
+      <Project>{C1BBF557-EEA4-4D93-AB1C-4949AE6DA0FF}</Project>
+      <Name>HomeWork2.Phone.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HomeWork2.Shared\HomeWork2.Shared.csproj">
+      <Project>{DE935C6C-F631-46EA-91B1-3A5F1BDAB427}</Project>
+      <Name>HomeWork2.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HomeWork3.ScheduledTaskAgent\HomeWork3.ScheduledTaskAgent.csproj">
       <Project>{D40C5E97-16A3-4651-89FF-9A30D87E0770}</Project>
       <Name>HomeWork3.ScheduledTaskAgent</Name>

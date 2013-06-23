@@ -11,7 +11,27 @@
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
-    shell:SystemTray.IsVisible="True">
+    shell:SystemTray.IsVisible="True"
+    xmlns:ViewModels="clr-namespace:HomeWork3"
+    >
+    <phone:PhoneApplicationPage.Resources>
+        <ViewModels:MainPageViewModel x:Key="ViewModel" />
+        <DataTemplate x:Key="PhotoItemDataTemplate">
+            <Border Margin="9,6" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="{Binding Title}" TextWrapping="Wrap" />
+                    <Image HorizontalAlignment="Left"  Grid.Row="1" Source="{Binding SmallImage,Mode=OneTime}" Stretch="None"  />
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </phone:PhoneApplicationPage.Resources>
+    <phone:PhoneApplicationPage.DataContext>
+        <Binding Source="{StaticResource ViewModel}"/>
+    </phone:PhoneApplicationPage.DataContext>
 
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
@@ -41,13 +61,18 @@
 
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock Text="MY APPLICATION" Style="{StaticResource PhoneTextNormalStyle}" Margin="12,0"/>
-            <TextBlock Text="page name" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+            <TextBlock Text="SCREEN PHOTO" Style="{StaticResource PhoneTextNormalStyle}"/>
+            <TextBlock Text="Pictures" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Button Content="Set Topic" Command="{Binding NavigateToConfigCommand,Mode=OneTime}" />
+            <phone:LongListSelector Grid.Row="1" ItemsSource="{Binding Photos}" ItemTemplate="{StaticResource PhotoItemDataTemplate}" />
         </Grid>
 
         <!--Uncomment to see an alignment grid to help ensure your controls are
