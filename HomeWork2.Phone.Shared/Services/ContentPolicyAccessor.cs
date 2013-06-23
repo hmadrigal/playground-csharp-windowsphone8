@@ -32,9 +32,7 @@ namespace HomeWork2.Services
             var isThereFile = false;           
             try
             {
-                var dataFolderTask = Windows.Storage.ApplicationData.Current.LocalFolder.CreateFolderAsync(FileManager.CacheFolderName, CreationCollisionOption.OpenIfExists).AsTask();
-                dataFolderTask.Wait();
-                var dataFolder = dataFolderTask.Result;
+                var dataFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
                 var getFileTask = dataFolder.GetFileAsync(fileName).AsTask();
                 getFileTask.Wait();
                 isThereFile = getFileTask.Exception == null;
@@ -92,9 +90,7 @@ namespace HomeWork2.Services
             try
             {
                 var fileName = GetFileKey(state);
-                var dataFolderTask = Windows.Storage.ApplicationData.Current.LocalFolder.CreateFolderAsync(FileManager.CacheFolderName, CreationCollisionOption.OpenIfExists).AsTask();
-                dataFolderTask.Wait();
-                var dataFolder = dataFolderTask.Result;
+                var dataFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
 
                 var getFileTask = dataFolder.GetFileAsync(fileName).AsTask();
                 getFileTask.Wait();

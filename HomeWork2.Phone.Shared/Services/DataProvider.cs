@@ -104,6 +104,7 @@ namespace HomeWork2.Services
                 var server = (string)photoElement.Attribute("server");
                 var id = (string)photoElement.Attribute("id");
                 var secret = (string)photoElement.Attribute("secret");
+                var url = string.Format(@"http://farm{0}.staticflickr.com/{1}/{2}_{3}_m.jpg", farm, server, id, secret); ;
                 photoItems.Add(new PhotoItem()
                              {
                                  Id = id,
@@ -115,22 +116,16 @@ namespace HomeWork2.Services
                                  Ispublic = (string)photoElement.Attribute("ispublic"),
                                  Isfriend = (string)photoElement.Attribute("isfriend"),
                                  Isfamily = (string)photoElement.Attribute("isfamily"),
-                                 SmallImage = await GetImage(farm, server, id, secret, GetBitmapSource),
+                                 ExternalUrl = url,
+                                 SmallImage = await GetImage(url, GetBitmapSource),
                              });
             }
 
             return photoItems;
         }
 
-        private async static Task<object> GetImage(string farm, string server, string id, string secret, Func<Stream, object> GetBitmapSource = null)
+        private async static Task<object> GetImage(string url, Func<Stream, object> GetBitmapSource = null)
         {
-            var url = string.Format(@"http://farm{0}.staticflickr.com/{1}/{2}_{3}_m.jpg",
-                                                 farm,//farm-id
-                                                 server,//server-id
-                                                 id,//id
-                                                 secret//secret
-                                             );
-
             object bitmapSource = null;
             if (bitmapSource == null)
             {
