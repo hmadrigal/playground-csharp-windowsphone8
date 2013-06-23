@@ -18,8 +18,8 @@ namespace HomeWork3
 
         public string Topic
         {
-            get { return IsolatedStorageSettings.ApplicationSettings[TopicKeyName] as string; }
-            set { IsolatedStorageSettings.ApplicationSettings[TopicKeyName] = value; }
+            get { return IsolatedStorageSettings.ApplicationSettings[ScheduledAgent.TopicKeyName] as string; }
+            set { IsolatedStorageSettings.ApplicationSettings[ScheduledAgent.TopicKeyName] = value; }
         }
 
         public ObservableCollection<PhotoItem> Photos { get; private set; }
@@ -27,16 +27,15 @@ namespace HomeWork3
         public ICommand LoadCommand { get; private set; }
         public ICommand NavigateToConfigCommand { get; private set; }
 
-        internal const string TopicKeyName = @"topic";
 
         public MainPageViewModel()
         {
             Photos = new ObservableCollection<PhotoItem>();
             LoadCommand = new RelayCommand(OnLoadCommandInvoked);
             NavigateToConfigCommand = new RelayCommand(OnNavigateToConfigCommandInvoked);
-            if (!IsolatedStorageSettings.ApplicationSettings.Contains(TopicKeyName))
+            if (!IsolatedStorageSettings.ApplicationSettings.Contains(ScheduledAgent.TopicKeyName))
             {
-                IsolatedStorageSettings.ApplicationSettings[TopicKeyName] = "Costa Rica";
+                IsolatedStorageSettings.ApplicationSettings[ScheduledAgent.TopicKeyName] = "Costa Rica";
             }
         }
 
@@ -87,7 +86,7 @@ namespace HomeWork3
             // Images could be max Nine images.
             oCycleicon.CycleImages = photoUris;
             oCycleicon.Count = photoUris.Length;
-            oCycleicon.Title = photoUris.Length.ToString();
+            oCycleicon.Title = DateTime.Now.ToString("o"); //string.Concat("New ", photoUris.Length, " pics!"); ;
             TileManager.Instance.SetApplicationTileData(oCycleicon);
         }
 

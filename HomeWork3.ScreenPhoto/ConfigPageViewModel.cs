@@ -14,8 +14,8 @@ namespace HomeWork3
 
         public string Topic
         {
-            get { return IsolatedStorageSettings.ApplicationSettings[MainPageViewModel.TopicKeyName] as string; }
-            set { IsolatedStorageSettings.ApplicationSettings[MainPageViewModel.TopicKeyName] = value; }
+            get { return IsolatedStorageSettings.ApplicationSettings[ScheduledAgent.TopicKeyName] as string; }
+            set { IsolatedStorageSettings.ApplicationSettings[ScheduledAgent.TopicKeyName] = value; }
         }
 
         public ObservableCollection<PhotoItem> Photos { get; private set; }

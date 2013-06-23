@@ -92,6 +92,14 @@
       <Project>{C1BBF557-EEA4-4D93-AB1C-4949AE6DA0FF}</Project>
       <Name>HomeWork2.Phone.Shared</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HomeWork2.Shared\HomeWork2.Shared.csproj">
+      <Project>{DE935C6C-F631-46EA-91B1-3A5F1BDAB427}</Project>
+      <Name>HomeWork2.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HomeWork3.TileTemplater\HomeWork3.TileTemplater.csproj">
+      <Project>{4F55B516-B3D4-4FCB-9A1C-09BE4FA7D0B1}</Project>
+      <Name>HomeWork3.TileTemplater</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
