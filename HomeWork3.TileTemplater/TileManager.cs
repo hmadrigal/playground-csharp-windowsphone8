@@ -1,5 +1,8 @@
 ﻿using Microsoft.Phone.Shell;
+using System.IO;
+using System.IO.IsolatedStorage;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace HomeWork3
 {
@@ -15,7 +18,23 @@ namespace HomeWork3
             }
             return false;
         }
-        
+
+        private IsolatedStorageFile _isolatedStorageFile = IsolatedStorageFile.GetUserStoreForApplication();
+
+        public async Task SaveToSharedShellDirectory(string filename, Stream inputFile)
+        {
+            var filelePath = Path.Combine("shared/shellcontent/", filename);
+            using (var isoStoreFile = _isolatedStorageFile.OpenFile(filelePath, FileMode.Create, FileAccess.ReadWrite))
+            {
+                await inputFile.CopyToAsync(isoStoreFile);
+            }
+        }
+
+        public string GetShellDirectoryFilePath(string filename)
+        {
+            return string.Concat("isostore:/Shared/ShellContent/", filename);
+        }
+
         private void InitializeTileManager()
         {
         }

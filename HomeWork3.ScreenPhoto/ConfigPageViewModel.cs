@@ -14,14 +14,14 @@ namespace HomeWork3
 
         public string Topic
         {
-            get { return IsolatedStorageSettings.ApplicationSettings[TopicKeyName] as string; }
-            set { IsolatedStorageSettings.ApplicationSettings[TopicKeyName] = value; }
+            get { return IsolatedStorageSettings.ApplicationSettings[MainPageViewModel.TopicKeyName] as string; }
+            set { IsolatedStorageSettings.ApplicationSettings[MainPageViewModel.TopicKeyName] = value; }
         }
 
         public ObservableCollection<PhotoItem> Photos { get; private set; }
 
         public ICommand LoadCommand { get; private set; }
-        private const string TopicKeyName = @"topic";
+        
 
         public ConfigPageViewModel()
         {

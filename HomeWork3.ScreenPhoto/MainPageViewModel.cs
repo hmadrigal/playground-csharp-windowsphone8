@@ -7,6 +7,9 @@ using System.Collections.ObjectModel;
 using System.IO.IsolatedStorage;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Linq;
+using System.Collections.Generic;
+using Microsoft.Phone.Shell;
 
 namespace HomeWork3
 {
@@ -24,7 +27,7 @@ namespace HomeWork3
         public ICommand LoadCommand { get; private set; }
         public ICommand NavigateToConfigCommand { get; private set; }
 
-        private const string TopicKeyName = @"topic";
+        internal const string TopicKeyName = @"topic";
 
         public MainPageViewModel()
         {
@@ -45,6 +48,47 @@ namespace HomeWork3
         private async void OnLoadCommandInvoked()
         {
             await DownloadPicturesAsync(Topic);
+            if (Photos.Count == 0)
+            {
+                return;
+            }
+            else if (Photos.Count <= 9)
+            {
+                await UpdateTileDate(Photos);
+            }
+            else
+            {
+                var photos = Photos.Skip(Photos.Count - 9);
+                await UpdateTileDate(photos.ToList());
+            }
+        }
+
+        private IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
+
+        private async Task UpdateTileDate(IEnumerable<PhotoItem> photos)
+        {
+            if (photos == null || !photos.Any())
+            {
+                return;
+            }
+
+            var photoUris = photos.Select(pi => new Uri(pi.ExternalUrl, UriKind.RelativeOrAbsolute)).ToArray();
+            for (int i = 0; i < photoUris.Length; i++)
+            {
+                LifeTimePolicyAccessor.Instance.SetTimeToLive(photoUris[i], TimeSpan.FromMinutes(30));
+                var photoStream = await ContentAccessors.Instance.GetContent(photoUris[i], LifeTimePolicyAccessor.Instance);
+                var fileName = string.Concat("CycleTileDataImg", i);
+                await TileManager.Instance.SaveToSharedShellDirectory(fileName, photoStream);
+                photoUris[i] = new Uri(TileManager.Instance.GetShellDirectoryFilePath(fileName), UriKind.RelativeOrAbsolute);
+            }
+
+            CycleTileData oCycleicon = new CycleTileData();
+            oCycleicon.SmallBackgroundImage = new Uri("Photovoltaic-Panel.png", UriKind.Relative);
+            // Images could be max Nine images.
+            oCycleicon.CycleImages = photoUris;
+            oCycleicon.Count = photoUris.Length;
+            oCycleicon.Title = photoUris.Length.ToString();
+            TileManager.Instance.SetApplicationTileData(oCycleicon);
         }
 
         public async Task DownloadPicturesAsync(string queryTerm)
