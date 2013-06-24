@@ -10,7 +10,7 @@ namespace HomeWork3
 
     public sealed class LockManager
     {
-        public async Task LockScreenChangeSilently(string filePathOfTheImage, bool isAppResource = false)
+        public void LockScreenChangeSilently(string filePathOfTheImage, bool isAppResource = false)
         {
             try
             {

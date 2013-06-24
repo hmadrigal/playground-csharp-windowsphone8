@@ -8,17 +8,6 @@ namespace HomeWork3
 {
     public sealed class TileManager
     {
-        public bool SetApplicationTileData<T>(T newData) where T : ShellTileData
-        {
-            ShellTile tile = ShellTile.ActiveTiles.FirstOrDefault();
-            if (tile != null)
-            {
-                tile.Update(newData);
-                return true;
-            }
-            return false;
-        }
-
         private IsolatedStorageFile _isolatedStorageFile = IsolatedStorageFile.GetUserStoreForApplication();
 
         public async Task SaveToSharedShellDirectory(string filename, Stream inputFile)
@@ -33,6 +22,17 @@ namespace HomeWork3
         public string GetShellDirectoryFilePath(string filename)
         {
             return string.Concat("isostore:/Shared/ShellContent/", filename);
+        }
+
+        public bool SetApplicationTileData<T>(T newData) where T : ShellTileData
+        {
+            ShellTile tile = ShellTile.ActiveTiles.FirstOrDefault();
+            if (tile != null)
+            {
+                tile.Update(newData);
+                return true;
+            }
+            return false;
         }
 
         private void InitializeTileManager()
