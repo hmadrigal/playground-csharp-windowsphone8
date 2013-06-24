@@ -56,7 +56,6 @@ namespace HomeWork3
                 // Get the URI of the lock screen background image.
                 var currentImage = LockScreen.GetImageUri();
                 System.Diagnostics.Debug.WriteLine("The new lock screen background image is set to {0}", currentImage.ToString());
-                System.Windows.MessageBox.Show("Lock screen changed. Click F12 or go to lock screen.");
             }
             else
             {
