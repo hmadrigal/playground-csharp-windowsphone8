@@ -96,9 +96,9 @@
       <Project>{DE935C6C-F631-46EA-91B1-3A5F1BDAB427}</Project>
       <Name>HomeWork2.Shared</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HomeWork3.TileTemplater\HomeWork3.TileTemplater.csproj">
+    <ProjectReference Include="..\HomeWork3.TileTemplater\HomeWork3.PhoneServices.csproj">
       <Project>{4F55B516-B3D4-4FCB-9A1C-09BE4FA7D0B1}</Project>
-      <Name>HomeWork3.TileTemplater</Name>
+      <Name>HomeWork3.PhoneServices</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />

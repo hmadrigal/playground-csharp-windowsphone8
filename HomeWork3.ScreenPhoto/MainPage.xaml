@@ -18,14 +18,14 @@
         <ViewModels:MainPageViewModel x:Key="ViewModel" />
         <DataTemplate x:Key="PhotoItemDataTemplate">
             <Border Margin="9,6" >
-                <Grid>
+                <!--<Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <TextBlock Text="{Binding Title}" TextWrapping="Wrap" />
-                    <Image HorizontalAlignment="Left"  Grid.Row="1" Source="{Binding SmallImage,Mode=OneTime}" Stretch="None"  />
-                </Grid>
+                    <TextBlock Text="{Binding Title}" TextWrapping="Wrap" />-->
+                    <Image Source="{Binding SmallImage,Mode=OneTime}" Stretch="UniformToFill"  />
+                <!--</Grid>-->
             </Border>
         </DataTemplate>
     </phone:PhoneApplicationPage.Resources>
@@ -62,7 +62,7 @@
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
             <TextBlock Text="SCREEN PHOTO" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock Text="Pictures" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+            <TextBlock Text="{Binding Title}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->

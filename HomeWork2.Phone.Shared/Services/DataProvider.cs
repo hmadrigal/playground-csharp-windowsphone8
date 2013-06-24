@@ -89,7 +89,7 @@ namespace HomeWork2.Services
 
         public async Task<IEnumerable<PhotoItem>> GetPhotos(string queryTerm, Func<Stream, object> GetBitmapSource = null)
         {
-            var uri = new Uri(string.Format(@"http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key={0}&text={1}&format=rest", ApiKeyFlickrCityExplorer, queryTerm));
+            var uri = new Uri(string.Format(@"http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key={0}&text={1}&format=rest&per_page=25", ApiKeyFlickrCityExplorer, queryTerm));
             LifeTimePolicyAccessor.Instance.SetTimeToLive(uri, TimeSpan.FromMinutes(30));
             var contentStream = await ContentAccessors.Instance.GetContent(uri, LifeTimePolicyAccessor.Instance);
             XDocument document;
@@ -104,7 +104,7 @@ namespace HomeWork2.Services
                 var server = (string)photoElement.Attribute("server");
                 var id = (string)photoElement.Attribute("id");
                 var secret = (string)photoElement.Attribute("secret");
-                var url = string.Format(@"http://farm{0}.staticflickr.com/{1}/{2}_{3}_m.jpg", farm, server, id, secret); ;
+                var url = string.Format(@"http://farm{0}.staticflickr.com/{1}/{2}_{3}_z.jpg", farm, server, id, secret); ;
                 photoItems.Add(new PhotoItem()
                              {
                                  Id = id,
@@ -117,6 +117,7 @@ namespace HomeWork2.Services
                                  Isfriend = (string)photoElement.Attribute("isfriend"),
                                  Isfamily = (string)photoElement.Attribute("isfamily"),
                                  ExternalUrl = url,
+                                 LocalFilename = KeepStoredPolicyAccessor.Instance.GetFileKey(url),
                                  SmallImage = await GetImage(url, GetBitmapSource),
                              });
             }

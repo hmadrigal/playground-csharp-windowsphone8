@@ -171,9 +171,9 @@
       <Project>{D40C5E97-16A3-4651-89FF-9A30D87E0770}</Project>
       <Name>HomeWork3.ScheduledTaskAgent</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HomeWork3.TileTemplater\HomeWork3.TileTemplater.csproj">
+    <ProjectReference Include="..\HomeWork3.TileTemplater\HomeWork3.PhoneServices.csproj">
       <Project>{4F55B516-B3D4-4FCB-9A1C-09BE4FA7D0B1}</Project>
-      <Name>HomeWork3.TileTemplater</Name>
+      <Name>HomeWork3.PhoneServices</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />

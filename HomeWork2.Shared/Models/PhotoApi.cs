@@ -18,5 +18,6 @@ namespace HomeWork2.Models
         public string Isfamily { get; set; }
         public object SmallImage { get; set; }
         public String ExternalUrl { get; set; }
+        public string LocalFilename { get; set; }
     }
 }

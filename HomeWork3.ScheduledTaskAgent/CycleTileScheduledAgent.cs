@@ -10,6 +10,7 @@ using HomeWork2.Models;
 using System.Linq;
 using System.IO.IsolatedStorage;
 using HomeWork3;
+using Windows.Phone.System.UserProfile;
 
 namespace HomeWork3ScheduledTasks
 {
@@ -18,12 +19,13 @@ namespace HomeWork3ScheduledTasks
         public string Topic
         {
             get { return IsolatedStorageSettings.ApplicationSettings[CycleTileScheduledAgent.TopicKeyName] as string; }
-            set {
+            set
+            {
                 IsolatedStorageSettings.ApplicationSettings[CycleTileScheduledAgent.TopicKeyName] = value;
                 IsolatedStorageSettings.ApplicationSettings.Save();
             }
         }
-        
+
         public const string TopicKeyName = @"topic";
 
 
@@ -62,7 +64,7 @@ namespace HomeWork3ScheduledTasks
         {
             //try
             //{
-                await UpdateCycleTilesAsync();
+            await UpdateCycleTilesAsync();
             //}
             //catch (Exception ex)
             //{ }
@@ -80,11 +82,13 @@ namespace HomeWork3ScheduledTasks
             else if (Photos.Count <= 9)
             {
                 await UpdateTileDate(Photos);
+                LockManager.Instance.LockScreenChange(Photos[Photos.Count - 1].LocalFilename);
             }
             else
             {
                 var photos = Photos.Skip(Photos.Count - 9);
                 await UpdateTileDate(photos.ToList());
+                LockManager.Instance.LockScreenChange(Photos[Photos.Count - 1].LocalFilename);
             }
         }
 

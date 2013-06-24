@@ -23,7 +23,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeWork3.ScreenPhoto", "Ho
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeWork3.ScheduledTaskAgent", "HomeWork3.ScheduledTaskAgent\HomeWork3.ScheduledTaskAgent.csproj", "{D40C5E97-16A3-4651-89FF-9A30D87E0770}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeWork3.TileTemplater", "HomeWork3.TileTemplater\HomeWork3.TileTemplater.csproj", "{4F55B516-B3D4-4FCB-9A1C-09BE4FA7D0B1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeWork3.PhoneServices", "HomeWork3.TileTemplater\HomeWork3.PhoneServices.csproj", "{4F55B516-B3D4-4FCB-9A1C-09BE4FA7D0B1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeWork3.WeatherInfo", "HomeWork3.WeatherInfo\HomeWork3.WeatherInfo.csproj", "{6580F86A-E5DE-4729-A9CD-7EFB50375619}"
 EndProject

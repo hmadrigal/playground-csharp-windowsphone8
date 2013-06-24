@@ -11,11 +11,20 @@ using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Phone.Shell;
 using HomeWork3ScheduledTasks;
+using Windows.Phone.System.UserProfile;
 
 namespace HomeWork3
 {
     public class MainPageViewModel : BindableBase
     {
+        #region Title (INotifyPropertyChanged Property)
+        public string Title
+        {
+            get { return _title; }
+            set { SetProperty(ref _title, value); }
+        }
+        private string _title;
+        #endregion
 
         public string Topic
         {
@@ -24,6 +33,7 @@ namespace HomeWork3
             {
                 IsolatedStorageSettings.ApplicationSettings[CycleTileScheduledAgent.TopicKeyName] = value;
                 IsolatedStorageSettings.ApplicationSettings.Save();
+                RaisePropertyChanged(CycleTileScheduledAgent.TopicKeyName);
             }
         }
 
@@ -31,7 +41,6 @@ namespace HomeWork3
 
         public ICommand LoadCommand { get; private set; }
         public ICommand NavigateToConfigCommand { get; private set; }
-
 
         public MainPageViewModel()
         {
@@ -52,6 +61,7 @@ namespace HomeWork3
 
         private async void OnLoadCommandInvoked()
         {
+            Title = Topic;
             await DownloadPicturesAsync(Topic);
             if (Photos.Count == 0)
             {
@@ -60,15 +70,16 @@ namespace HomeWork3
             else if (Photos.Count <= 9)
             {
                 await UpdateTileDate(Photos);
+                LockManager.Instance.LockScreenChange(Photos[Photos.Count - 1].LocalFilename);
             }
             else
             {
                 var photos = Photos.Skip(Photos.Count - 9);
                 await UpdateTileDate(photos.ToList());
+                LockManager.Instance.LockScreenChange(Photos[Photos.Count - 1].LocalFilename);
             }
-        }
 
-        private IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
+        }
 
         private async Task UpdateTileDate(IEnumerable<PhotoItem> photos)
         {
@@ -115,5 +126,7 @@ namespace HomeWork3
             bitmapSource.SetSource(stream);
             return bitmapSource;
         }
+
+
     }
 }
