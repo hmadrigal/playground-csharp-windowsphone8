@@ -16,6 +16,9 @@
     >
     <phone:PhoneApplicationPage.Resources>
         <ViewModels:MainPageViewModel x:Key="ViewModel" />
+        <ControlTemplate x:Key="EmptyControlTemplate">
+            <ContentPresenter/>
+        </ControlTemplate>
         <DataTemplate x:Key="PhotoItemDataTemplate">
             <Border Margin="9,6" >
                 <!--<Grid>
@@ -62,7 +65,9 @@
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
             <TextBlock Text="SCREEN PHOTO" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock Text="{Binding Title}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+            <HyperlinkButton Margin="9,-7,0,0" NavigateUri="/ConfigPage.xaml" Template="{StaticResource EmptyControlTemplate}">
+                <TextBlock Text="{Binding Title}" Style="{StaticResource PhoneTextTitle1Style}"/>
+            </HyperlinkButton>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
@@ -72,7 +77,6 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Button Content="Set Topic" Command="{Binding NavigateToConfigCommand,Mode=OneTime}" />
             <phone:LongListSelector Grid.Row="1" ItemsSource="{Binding Photos}" ItemTemplate="{StaticResource PhotoItemDataTemplate}" />
             <Button Grid.Row="2" x:Name="StartBackgroundWork" Content="Start Background Work" Click="OnStartBackgroundWorkClicked" />
         </Grid>

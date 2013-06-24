@@ -51,23 +51,17 @@ namespace HomeWork3
         public ObservableCollection<PhotoItem> Photos { get; private set; }
 
         public ICommand LoadCommand { get; private set; }
-        public ICommand NavigateToConfigCommand { get; private set; }
+        
 
         public MainPageViewModel()
         {
             Photos = new ObservableCollection<PhotoItem>();
             LoadCommand = new RelayCommand(OnLoadCommandInvoked);
-            NavigateToConfigCommand = new RelayCommand(OnNavigateToConfigCommandInvoked);
-            if (!IsolatedStorageSettings.ApplicationSettings.Contains(CycleTileScheduledAgent.TopicKeyName))
+                        if (!IsolatedStorageSettings.ApplicationSettings.Contains(CycleTileScheduledAgent.TopicKeyName))
             {
                 IsolatedStorageSettings.ApplicationSettings[CycleTileScheduledAgent.TopicKeyName] = "Costa Rica";
                 IsolatedStorageSettings.ApplicationSettings.Save();
             }
-        }
-
-        private void OnNavigateToConfigCommandInvoked()
-        {
-            (App.Current.RootVisual as Microsoft.Phone.Controls.PhoneApplicationFrame).Navigate(new Uri(@"/ConfigPage.xaml", UriKind.RelativeOrAbsolute));
         }
 
         private async void OnLoadCommandInvoked()

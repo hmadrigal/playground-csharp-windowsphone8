@@ -53,13 +53,9 @@ namespace HomeWork3
         {
             ViewLoadedCommand = new RelayCommand(OnViewLoadedCommandInvoked);
             WeatherForecast = new ObservableCollection<WeatheForecastItem>();
-        }
-
-        private async void OnViewLoadedCommandInvoked()
-        {
             if (!IsolatedStorageSettings.ApplicationSettings.Contains(App.CityInfoKeyName))
             {
-                IsolatedStorageSettings.ApplicationSettings[App.CityInfoKeyName] = new SearchApiResultItem()
+                SelectedCity = new SearchApiResultItem()
                 {
                     AreaName = "San Jose",
                     Country = "Costa Rica",
@@ -69,6 +65,11 @@ namespace HomeWork3
                     WeatherUrl = 0.0,
                 };
             }
+        }
+
+        private async void OnViewLoadedCommandInvoked()
+        {
+
             IsLoading = true;
             var weatherResult = await DataProvider.Instance.GetWeatherResults(SelectedCity.Latitude, SelectedCity.Longitude);
             foreach (var item in weatherResult.Item2)
