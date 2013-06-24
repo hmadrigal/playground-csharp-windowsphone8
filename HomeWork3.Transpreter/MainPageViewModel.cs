@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.Phone.Speech.Synthesis;
 
 namespace HomeWork3
 {
@@ -21,6 +22,13 @@ namespace HomeWork3
 
         private void OnViewLoadedCommandInvoked()
         {
+            Say("I like cheese.");
+        }
+
+        private async void Say(string text)
+        {
+            SpeechSynthesizer synth = new SpeechSynthesizer();
+            await synth.SpeakTextAsync(text);
         }
     }
 }
