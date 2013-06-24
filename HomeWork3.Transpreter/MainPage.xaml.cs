@@ -13,6 +13,9 @@ namespace HomeWork3.Transpreter
 {
     public partial class MainPage : PhoneApplicationPage
     {
+
+        public MainPageViewModel View { get { return DataContext as MainPageViewModel; } }
+
         // Constructor
         public MainPage()
         {
@@ -20,6 +23,14 @@ namespace HomeWork3.Transpreter
 
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
+            Loaded += MainPage_Loaded;
+
+        }
+
+        void MainPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            //Loaded -= MainPage_Loaded;
+            View.ViewLoadedCommand.Execute(null);
         }
 
         // Sample code for building a localized ApplicationBar
