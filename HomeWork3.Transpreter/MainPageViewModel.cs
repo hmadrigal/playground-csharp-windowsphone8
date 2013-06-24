@@ -29,6 +29,13 @@ namespace HomeWork3
         {
             SpeechSynthesizer synth = new SpeechSynthesizer();
             await synth.SpeakTextAsync(text);
+
+            //// Query for a voice that speaks French. 
+            //var frenchVoices = from voice in InstalledVoices.All 
+            //                   where voice.Language == "fr-FR" 
+            //                   select voice; 
+            //// Set the voice as identified by the query. 
+            //synth.SetVoice(frenchVoices.ElementAt(0));
         }
     }
 }
