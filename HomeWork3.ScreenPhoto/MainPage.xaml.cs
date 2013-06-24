@@ -90,15 +90,12 @@ namespace HomeWork3
 
         }
 
-#if DEBUG
-
         private void OnStartBackgroundWorkClicked(object sender, RoutedEventArgs e)
         {
             var foo = Microsoft.Phone.Scheduler.ScheduledActionService.Find(periodicTaskName);
             Microsoft.Phone.Scheduler.ScheduledActionService.LaunchForTest(periodicTaskName, TimeSpan.FromSeconds(10));
         }
 
-#endif
         // Sample code for building a localized ApplicationBar
         //private void BuildLocalizedApplicationBar()
         //{
