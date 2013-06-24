@@ -20,7 +20,8 @@ namespace HomeWork3
         public string Topic
         {
             get { return IsolatedStorageSettings.ApplicationSettings[CycleTileScheduledAgent.TopicKeyName] as string; }
-            set { 
+            set
+            {
                 IsolatedStorageSettings.ApplicationSettings[CycleTileScheduledAgent.TopicKeyName] = value;
                 IsolatedStorageSettings.ApplicationSettings.Save();
             }
@@ -91,7 +92,7 @@ namespace HomeWork3
             // Images could be max Nine images.
             oCycleicon.CycleImages = photoUris;
             oCycleicon.Count = photoUris.Length;
-            oCycleicon.Title = DateTime.Now.ToString("o"); //string.Concat("New ", photoUris.Length, " pics!"); ;
+            oCycleicon.Title = Topic; //DateTime.Now.ToString("o"); //string.Concat("New ", photoUris.Length, " pics!"); ;
             TileManager.Instance.SetApplicationTileData(oCycleicon);
         }
 

@@ -110,7 +110,7 @@ namespace HomeWork3ScheduledTasks
             // Images could be max Nine images.
             oCycleicon.CycleImages = photoUris;
             oCycleicon.Count = photoUris.Length;
-            oCycleicon.Title = DateTime.Now.ToString("o"); //string.Concat("New ", photoUris.Length, " pics!"); ;
+            oCycleicon.Title = Topic; //DateTime.Now.ToString("o"); //string.Concat("New ", photoUris.Length, " pics!"); ;
             TileManager.Instance.SetApplicationTileData(oCycleicon);
         }
     }
