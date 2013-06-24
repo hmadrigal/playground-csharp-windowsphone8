@@ -24,8 +24,18 @@ namespace HomeWork3
             {
                 IsolatedStorageSettings.ApplicationSettings[App.CityInfoKeyName] = value;
                 IsolatedStorageSettings.ApplicationSettings.Save();
+                RaisePropertyChanged(App.CityInfoKeyName);
             }
         }
+
+        #region CityName (INotifyPropertyChanged Property)
+        public string CityName
+        {
+            get { return _cityName; }
+            set { SetProperty(ref _cityName, value); }
+        }
+        private string _cityName;
+        #endregion
 
         #region IsLoading (INotifyPropertyChanged Property)
         public bool IsLoading
@@ -71,6 +81,8 @@ namespace HomeWork3
         {
 
             IsLoading = true;
+            RaisePropertyChanged(App.CityInfoKeyName);
+            CityName = string.Concat(SelectedCity.AreaName, ", ", SelectedCity.Country);
             var weatherResult = await DataProvider.Instance.GetWeatherResults(SelectedCity.Latitude, SelectedCity.Longitude);
             foreach (var item in weatherResult.Item2)
             {

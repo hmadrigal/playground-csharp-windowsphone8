@@ -29,7 +29,7 @@ namespace HomeWork3
 
         void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
-            Loaded -= MainPage_Loaded;
+            //Loaded -= MainPage_Loaded;
             View.ViewLoadedCommand.Execute(null);
         }
 

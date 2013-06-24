@@ -1,5 +1,6 @@
 ﻿<phone:PhoneApplicationPage
     x:Class="HomeWork3.ConfigPage"
+    x:Name="View"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
@@ -16,6 +17,20 @@
     >
     <phone:PhoneApplicationPage.Resources>
         <ViewModels:ConfigPageViewModel x:Key="ViewModel" />
+        <DataTemplate x:Key="SearchResultItemDataTemplate">
+            <Button Margin="9,6" HorizontalContentAlignment="Left" 
+                    Command="{Binding DataContext.SelectCityCommand, ElementName=View,Mode=OneTime}"
+                    CommandParameter="{Binding}"
+            >
+                <TextBlock TextWrapping="Wrap">
+                        <Run Text="{Binding Country}"/>
+                        <Run Text="  "/>
+                        <Run Text="{Binding Region}"/>
+                        <Run Text="  "/>
+                        <Run Text="{Binding AreaName}"/>
+                </TextBlock>
+            </Button>
+        </DataTemplate>
     </phone:PhoneApplicationPage.Resources>
 
     <phone:PhoneApplicationPage.DataContext>
@@ -32,12 +47,27 @@
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel Grid.Row="0" Margin="12,17,0,28">
             <TextBlock Text="WEATHER INFO" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock Text="Settings" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+            <TextBlock Text="{Binding CityName}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock TextWrapping="Wrap" Text="Look for a city: "/>
+            <TextBox Grid.Row="1" Text="{Binding CityName,Mode=TwoWay}" />
+            <Button Grid.Row="1" Content="Search" Grid.Column="1" 
+                            Command="{Binding SearchCityCommand,Mode=OneTime}"
+                            CommandParameter="{Binding CityName}"
+                            />
+            <phone:LongListSelector Grid.Row="2" Grid.ColumnSpan="2" ItemsSource="{Binding SearchResults}" ItemTemplate="{StaticResource SearchResultItemDataTemplate}"/>
         </Grid>
 
         <ProgressBar IsIndeterminate="{Binding IsLoading}"  VerticalAlignment="Top"/>

@@ -72,7 +72,7 @@
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
             <TextBlock Text="WEATHER INFO" Style="{StaticResource PhoneTextNormalStyle}"/>
             <HyperlinkButton Margin="9,-7,0,0" NavigateUri="/ConfigPage.xaml" Template="{StaticResource EmptyControlTemplate}">
-                <TextBlock Text="{Binding SelectedCity.AreaName}" Style="{StaticResource PhoneTextTitle1Style}"/>
+                <TextBlock Text="{Binding CityName}" Style="{StaticResource PhoneTextTitle1Style}"/>
             </HyperlinkButton>
         </StackPanel>
 
