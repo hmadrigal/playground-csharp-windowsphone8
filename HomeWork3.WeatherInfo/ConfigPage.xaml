@@ -15,7 +15,7 @@
     xmlns:ViewModels="clr-namespace:HomeWork3"
     >
     <phone:PhoneApplicationPage.Resources>
-        <ViewModels:MainPageViewModel x:Key="ViewModel" />
+        <ViewModels:ConfigPageViewModel x:Key="ViewModel" />
     </phone:PhoneApplicationPage.Resources>
 
     <phone:PhoneApplicationPage.DataContext>
@@ -31,31 +31,13 @@
 
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock Text="SCREEN PHOTO" Style="{StaticResource PhoneTextNormalStyle}"/>
+            <TextBlock Text="WEATHER INFO" Style="{StaticResource PhoneTextNormalStyle}"/>
             <TextBlock Text="Settings" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <TextBlock Text="{Binding CityName,Mode=OneWay,StringFormat='City:\{0\}'}" />
-            <Grid Grid.Row="1" >
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <TextBox Text="{Binding CityName,Mode=TwoWay}" />
-                <Button Grid.Column="1" Content="Search" 
-                            Command="{Binding SearchCityCommand,Mode=OneTime}"
-                            CommandParameter="{Binding CityName}"
-                            />
-            </Grid>
 
-            <phone:LongListSelector Grid.Row="2" Grid.ColumnSpan="2" ItemsSource="{Binding SearchResults}" ItemTemplate="{StaticResource SearchResultItemDataTemplate}"/>
         </Grid>
 
         <ProgressBar IsIndeterminate="{Binding IsLoading}"  VerticalAlignment="Top"/>
