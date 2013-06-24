@@ -28,6 +28,7 @@ namespace HomeWork3ScheduledTasks
 
         public const string TopicKeyName = @"topic";
 
+        private readonly Random _random = new Random();
 
         /// <remarks>
         /// ScheduledAgent constructor, initializes the UnhandledException handler
@@ -62,12 +63,12 @@ namespace HomeWork3ScheduledTasks
         /// </remarks>
         protected async override void OnInvoke(ScheduledTask task)
         {
-            //try
-            //{
-            await UpdateCycleTilesAsync();
-            //}
-            //catch (Exception ex)
-            //{ }
+            try
+            {
+                await UpdateCycleTilesAsync();
+            }
+            catch (Exception ex)
+            { }
             //TODO: Add code to perform your task in background
             NotifyComplete();
         }
@@ -82,13 +83,13 @@ namespace HomeWork3ScheduledTasks
             else if (Photos.Count <= 9)
             {
                 await UpdateTileDate(Photos);
-                LockManager.Instance.LockScreenChange(Photos[Photos.Count - 1].LocalFilename);
+                LockManager.Instance.LockScreenChangeSilently(Photos[_random.Next(Photos.Count)].LocalFilename);
             }
             else
             {
                 var photos = Photos.Skip(Photos.Count - 9);
                 await UpdateTileDate(photos.ToList());
-                LockManager.Instance.LockScreenChange(Photos[Photos.Count - 1].LocalFilename);
+                LockManager.Instance.LockScreenChangeSilently(Photos[_random.Next(Photos.Count)].LocalFilename);
             }
         }
 

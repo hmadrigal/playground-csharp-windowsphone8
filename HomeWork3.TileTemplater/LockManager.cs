@@ -10,28 +10,34 @@ namespace HomeWork3
 
     public sealed class LockManager
     {
-        public async void LockScreenChangeSilently(string filePathOfTheImage, bool isAppResource = false)
+        public async Task LockScreenChangeSilently(string filePathOfTheImage, bool isAppResource = false)
         {
-            // Only do further work if the access is granted.
-            if (LockScreenManager.IsProvidedByCurrentApplication)
+            try
             {
-                // At this stage, the app is the active lock screen background provider.
-                // The following code example shows the new URI schema.
-                // ms-appdata points to the root of the local app data folder.
-                // ms-appx points to the Local app install folder, to reference resources bundled in the XAP package
-                var schema = isAppResource ? "ms-appx:///" : "ms-appdata:///Local/";
-                var uri = new Uri(schema + filePathOfTheImage, UriKind.Absolute);
+                // Only do further work if the access is granted.
+                if (LockScreenManager.IsProvidedByCurrentApplication)
+                {
+                    // At this stage, the app is the active lock screen background provider.
+                    // The following code example shows the new URI schema.
+                    // ms-appdata points to the root of the local app data folder.
+                    // ms-appx points to the Local app install folder, to reference resources bundled in the XAP package
+                    var schema = isAppResource ? "ms-appx:///" : "ms-appdata:///Local/";
+                    var uri = new Uri(schema + filePathOfTheImage, UriKind.Absolute);
 
-                // Set the lock screen background image.
-                LockScreen.SetImageUri(uri);
+                    // Set the lock screen background image.
+                    LockScreen.SetImageUri(uri);
 
-                // Get the URI of the lock screen background image.
-                var currentImage = LockScreen.GetImageUri();
-                System.Diagnostics.Debug.WriteLine("The new lock screen background image is set to {0}", currentImage.ToString());
+                    // Get the URI of the lock screen background image.
+                    var currentImage = LockScreen.GetImageUri();
+                    System.Diagnostics.Debug.WriteLine("The new lock screen background image is set to {0}", currentImage.ToString());
+                }
+            }
+            catch 
+            {
             }
         }
 
-        public async void LockScreenChange(string filePathOfTheImage, bool isAppResource = false)
+        public async Task LockScreenChange(string filePathOfTheImage, bool isAppResource = false)
         {
             if (!LockScreenManager.IsProvidedByCurrentApplication)
             {

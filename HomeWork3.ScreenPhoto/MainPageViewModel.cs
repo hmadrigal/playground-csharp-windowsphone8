@@ -26,6 +26,17 @@ namespace HomeWork3
         private string _title;
         #endregion
 
+        #region IsLoading (INotifyPropertyChanged Property)
+        public bool IsLoading
+        {
+            get { return _isLoading; }
+            set { SetProperty(ref _isLoading, value); }
+        }
+        private bool _isLoading;
+        #endregion
+
+        private readonly Random _random = new Random();
+
         public string Topic
         {
             get { return IsolatedStorageSettings.ApplicationSettings[CycleTileScheduledAgent.TopicKeyName] as string; }
@@ -61,24 +72,34 @@ namespace HomeWork3
 
         private async void OnLoadCommandInvoked()
         {
+            IsLoading = true;
             Title = Topic;
             await DownloadPicturesAsync(Topic);
             if (Photos.Count == 0)
             {
+                IsLoading = false;
                 return;
             }
             else if (Photos.Count <= 9)
             {
                 await UpdateTileDate(Photos);
-                LockManager.Instance.LockScreenChange(Photos[Photos.Count - 1].LocalFilename);
+                try
+                {
+                    await LockManager.Instance.LockScreenChange(Photos[_random.Next(Photos.Count)].LocalFilename);
+                }
+                catch { }
             }
             else
             {
                 var photos = Photos.Skip(Photos.Count - 9);
                 await UpdateTileDate(photos.ToList());
-                LockManager.Instance.LockScreenChange(Photos[Photos.Count - 1].LocalFilename);
+                try
+                {
+                    await LockManager.Instance.LockScreenChange(Photos[_random.Next(Photos.Count)].LocalFilename);
+                }
+                catch { }
             }
-
+            IsLoading = false;
         }
 
         private async Task UpdateTileDate(IEnumerable<PhotoItem> photos)
