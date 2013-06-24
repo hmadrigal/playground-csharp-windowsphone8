@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.Phone.Speech.Synthesis;
+using Windows.Phone.Speech.VoiceCommands;
 
 namespace HomeWork3
 {
@@ -22,7 +23,13 @@ namespace HomeWork3
 
         private void OnViewLoadedCommandInvoked()
         {
-            Say("I like cheese.");
+            Say("Me gusta el queso!");
+            SetupVoiceCommands();
+        }
+
+        private async void SetupVoiceCommands()
+        {
+            await VoiceCommandService.InstallCommandSetsFromFileAsync(new Uri("ms-appx:///VCD.xml", UriKind.RelativeOrAbsolute));
         }
 
         private async void Say(string text)
