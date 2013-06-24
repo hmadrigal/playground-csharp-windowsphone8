@@ -17,10 +17,10 @@ namespace HomeWork3ScheduledTasks
     {
         public string Topic
         {
-            get { return LocalStorageSettings.ApplicationSettings[TopicKeyName] as string; }
+            get { return IsolatedStorageSettings.ApplicationSettings[CycleTileScheduledAgent.TopicKeyName] as string; }
             set {
-                LocalStorageSettings.ApplicationSettings[TopicKeyName] = value;
-                LocalStorageSettings.ApplicationSettings.Save().Wait();
+                IsolatedStorageSettings.ApplicationSettings[CycleTileScheduledAgent.TopicKeyName] = value;
+                IsolatedStorageSettings.ApplicationSettings.Save();
             }
         }
         

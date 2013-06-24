@@ -19,8 +19,11 @@ namespace HomeWork3
 
         public string Topic
         {
-            get { return LocalStorageSettings.ApplicationSettings[CycleTileScheduledAgent.TopicKeyName] as string; }
-            set { LocalStorageSettings.ApplicationSettings[CycleTileScheduledAgent.TopicKeyName] = value; }
+            get { return IsolatedStorageSettings.ApplicationSettings[CycleTileScheduledAgent.TopicKeyName] as string; }
+            set { 
+                IsolatedStorageSettings.ApplicationSettings[CycleTileScheduledAgent.TopicKeyName] = value;
+                IsolatedStorageSettings.ApplicationSettings.Save();
+            }
         }
 
         public ObservableCollection<PhotoItem> Photos { get; private set; }
@@ -34,9 +37,10 @@ namespace HomeWork3
             Photos = new ObservableCollection<PhotoItem>();
             LoadCommand = new RelayCommand(OnLoadCommandInvoked);
             NavigateToConfigCommand = new RelayCommand(OnNavigateToConfigCommandInvoked);
-            if (!LocalStorageSettings.ApplicationSettings.Contains(CycleTileScheduledAgent.TopicKeyName))
+            if (!IsolatedStorageSettings.ApplicationSettings.Contains(CycleTileScheduledAgent.TopicKeyName))
             {
-                LocalStorageSettings.ApplicationSettings[CycleTileScheduledAgent.TopicKeyName] = "Costa Rica";
+                IsolatedStorageSettings.ApplicationSettings[CycleTileScheduledAgent.TopicKeyName] = "Costa Rica";
+                IsolatedStorageSettings.ApplicationSettings.Save();
             }
         }
 
