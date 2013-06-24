@@ -7,19 +7,30 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
-using HomeWork3.WeatherInfo.Resources;
+using Microsoft.Phone.Scheduler;
 
-namespace HomeWork3.WeatherInfo
+namespace HomeWork3
 {
     public partial class MainPage : PhoneApplicationPage
     {
+        public MainPageViewModel View { get { return DataContext as MainPageViewModel; } }
+        private string periodicTaskName = @"CycleTileScheduledAgent";
+
         // Constructor
         public MainPage()
         {
             InitializeComponent();
 
+            Loaded += MainPage_Loaded;
+
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
+        }
+
+        void MainPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= MainPage_Loaded;
+            View.ViewLoadedCommand.Execute(null);
         }
 
         // Sample code for building a localized ApplicationBar

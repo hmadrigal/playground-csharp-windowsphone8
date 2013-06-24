@@ -18,6 +18,9 @@ namespace HomeWork3.WeatherInfo
         /// <returns>The root frame of the Phone Application.</returns>
         public static PhoneApplicationFrame RootFrame { get; private set; }
 
+
+        internal const string CityInfoKeyName = @"CityInfoKeyName";
+
         /// <summary>
         /// Constructor for the Application object.
         /// </summary>
