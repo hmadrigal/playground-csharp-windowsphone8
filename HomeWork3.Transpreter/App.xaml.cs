@@ -6,7 +6,7 @@ using System.Windows.Markup;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
-using HomeWork3.Transpreter.Resources;
+using HomeWork3.Resources;
 
 namespace HomeWork3.Transpreter
 {

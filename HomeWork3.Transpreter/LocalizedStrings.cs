@@ -1,4 +1,4 @@
-﻿using HomeWork3.Transpreter.Resources;
+﻿using HomeWork3.Resources;
 
 namespace HomeWork3.Transpreter
 {
