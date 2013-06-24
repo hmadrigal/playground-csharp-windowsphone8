@@ -30,7 +30,7 @@
       <Item> spanish </Item>
     </PhraseList>
   </CommandSet>
-  <!--<CommandSet xml:lang="es-MX">
+  <CommandSet xml:lang="es-ES">
     <CommandPrefix> favor traducir </CommandPrefix>
     <Example> favor traducir de español a inglés </Example>
 
@@ -38,14 +38,14 @@
       <Example> favor traducir de español a inglés </Example>
       <ListenFor> [favor traducir de] {source} </ListenFor>
       <ListenFor> [a] {destination} </ListenFor>
-      <Feedback> traduciendo a {destination} </Feedback>
+      <Feedback> traduciendo a ... </Feedback>
       <Navigate Target="/TranslationPage.xaml" />
     </Command>
 
     <Command Name="TralateTo">
       <Example> favor traducir a inglés</Example>
       <ListenFor> [favor traducir a] {destination} </ListenFor>
-      <Feedback> traduciendo a {destination} </Feedback>
+      <Feedback> traduciendo a ... </Feedback>
       <Navigate Target="/TranslationPage.xaml" />
     </Command>
 
@@ -59,7 +59,7 @@
       <Item> español </Item>
     </PhraseList>
 
-  </CommandSet>-->
+  </CommandSet>
 </VoiceCommands>
 
 <!-- Example -->

@@ -88,6 +88,15 @@ namespace HomeWork3.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tell me what do you want to translate?.
+        /// </summary>
+        public static string MainPage_WelcomeMessage {
+            get {
+                return ResourceManager.GetString("MainPage_WelcomeMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to LeftToRight.
         /// </summary>
         public static string ResourceFlowDirection {
