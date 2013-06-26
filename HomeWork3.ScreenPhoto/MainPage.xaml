@@ -12,10 +12,9 @@
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
     shell:SystemTray.IsVisible="True"
-    xmlns:ViewModels="clr-namespace:HomeWork3"
+    xmlns:ViewModels="clr-namespace:HomeWork3;assembly=HomeWork3.ScreenPhoto"
     >
     <phone:PhoneApplicationPage.Resources>
-        <ViewModels:MainPageViewModel x:Key="ViewModel" />
         <ControlTemplate x:Key="EmptyControlTemplate">
             <ContentPresenter/>
         </ControlTemplate>
@@ -27,13 +26,13 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <TextBlock Text="{Binding Title}" TextWrapping="Wrap" />-->
-                    <Image Source="{Binding SmallImage,Mode=OneTime}" Stretch="UniformToFill"  />
+                <Image Source="{Binding SmallImage,Mode=OneTime}" Stretch="UniformToFill"  />
                 <!--</Grid>-->
             </Border>
         </DataTemplate>
     </phone:PhoneApplicationPage.Resources>
     <phone:PhoneApplicationPage.DataContext>
-        <Binding Source="{StaticResource ViewModel}"/>
+        <ViewModels:MainPageViewModel />
     </phone:PhoneApplicationPage.DataContext>
 
     <!--LayoutRoot is the root grid where all page content is placed-->
@@ -65,7 +64,8 @@
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
             <TextBlock Text="SCREEN PHOTO" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <HyperlinkButton Margin="9,-7,0,0" NavigateUri="/ConfigPage.xaml" Template="{StaticResource EmptyControlTemplate}">
+            <HyperlinkButton Margin="9,-7,0,0" Template="{StaticResource EmptyControlTemplate}">
+                <!--NavigateUri="/ConfigPage.xaml" -->
                 <TextBlock Text="{Binding Title}" Style="{StaticResource PhoneTextTitle1Style}"/>
             </HyperlinkButton>
         </StackPanel>
@@ -75,10 +75,13 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <phone:LongListSelector Grid.Row="1" ItemsSource="{Binding Photos}" ItemTemplate="{StaticResource PhotoItemDataTemplate}" />
-            <Button Grid.Row="2" x:Name="StartBackgroundWork" Content="Start Background Work" Click="OnStartBackgroundWorkClicked" />
+            <phone:LongListSelector Grid.Row="2" ItemsSource="{Binding TransferManager.CurrentTransfers}" />
+
+            <Button Grid.Row="3" x:Name="StartBackgroundWork" Content="Start Background Work" Click="OnStartBackgroundWorkClicked" />
         </Grid>
 
         <!--Uncomment to see an alignment grid to help ensure your controls are
@@ -88,7 +91,7 @@
 
             Before shipping remove this XAML and the image itself.-->
         <!--<Image Source="/Assets/AlignmentGrid.png" VerticalAlignment="Top" Height="800" Width="480" Margin="0,-32,0,0" Grid.Row="0" Grid.RowSpan="2" IsHitTestVisible="False" />-->
-        
+
         <ProgressBar IsIndeterminate="{Binding IsLoading}"  VerticalAlignment="Top"/>
     </Grid>
 
