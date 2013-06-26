@@ -72,18 +72,20 @@ namespace HomeWork3
             Title = Topic;
 
             Photos.Clear();
-            var photoResult = await DataProvider.Instance.GetPhotos(Topic, (stream) => null);
-            foreach (var item in photoResult)
+            await Task.Run(async () =>
             {
-                Photos.Add(item);
-                TransferManager.Instance.AddBackgroundTransfer(
-                    new TransferPayload()
-                    {
-                        LocalUrl = "/shared/transfers/" + item.LocalFilename,
-                        RemoteUrl = item.ExternalUrl,
-                    }
-                );
-            }
+                var photoResult = await DataProvider.Instance.GetPhotos(Topic, (stream) => null);
+                foreach (var item in photoResult)
+                {
+                    TransferManager.Instance.AddBackgroundTransfer(
+                        new TransferPayload()
+                        {
+                            LocalUrl = "/shared/transfers/" + item.LocalFilename,
+                            RemoteUrl = item.ExternalUrl,
+                        }
+                    );
+                }
+            });
 
 
             //await DownloadPicturesAsync(Topic);

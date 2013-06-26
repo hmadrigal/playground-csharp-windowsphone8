@@ -116,20 +116,19 @@ namespace HomeWork3
 
         public void AddBackgroundTransfer(params TransferPayload[] transferPayloads)
         {
-            var myRequests = CurrentTransfers;
             foreach (var transferPayload in transferPayloads)
             {
-                if (myRequests.Any(mr => mr.RemoteUrl == transferPayload.RemoteUrl))
+                if (CurrentTransfers.Any(mr => mr.RemoteUrl == transferPayload.RemoteUrl))
                 {
                     continue;
                 }
                 var request = new BackgroundTransferRequest(new Uri(transferPayload.RemoteUrl), new Uri(transferPayload.LocalUrl, UriKind.RelativeOrAbsolute));
-                myRequests.Add(transferPayload);
+                System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() => { CurrentTransfers.Add(transferPayload); });
                 BackgroundTransferService.Add(request);
                 request.TransferProgressChanged += OnRequestTransferProgressChanged;
                 request.TransferStatusChanged += OnRequestTransferStatusChanged;
             }
-            Save(TransferManagerListKeyName, myRequests);
+            Save(TransferManagerListKeyName, CurrentTransfers);
         }
 
         private void AttachEventsToBackgroundTransfers()
@@ -160,12 +159,11 @@ namespace HomeWork3
             switch (e.Request.TransferStatus)
             {
                 case TransferStatus.Completed:
-                    var myRequests = CurrentTransfers;
-                    var foundRequest = myRequests.FirstOrDefault(request => request.LocalUrl == e.Request.DownloadLocation.ToString());
+                    var foundRequest = CurrentTransfers.FirstOrDefault(request => request.LocalUrl == e.Request.DownloadLocation.ToString());
                     if (foundRequest != null)
                     {
-                        myRequests.Remove(foundRequest);
-                        Save(TransferManagerListKeyName, myRequests);
+                        System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() => { CurrentTransfers.Remove(foundRequest); });
+                        Save(TransferManagerListKeyName, CurrentTransfers);
                     }
                     e.Request.Dispose();
                     //BackgroundTransferService.Remove(e.Request);
