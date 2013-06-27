@@ -20,10 +20,11 @@
         </ControlTemplate>
 
         <DataTemplate x:Key="DisplayItemDataTemplate">
+            <Viewbox>
             <local:DataTemplateSelector Content="{Binding}">
                 <local:DataTemplateSelector.Resources>
                     <DataTemplate x:Key="TransferPayload">
-                        <Border Margin="9,6" MaxHeight="800" MaxWidth="400">
+                        <Border Margin="9,6">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
@@ -38,12 +39,13 @@
                         </Border>
                     </DataTemplate>
                     <DataTemplate x:Key="PhotoItem">
-                        <Border Margin="9,6" MaxHeight="800" MaxWidth="400">
+                        <Border Margin="9,6">
                             <Image Source="{Binding SmallImage, Mode=OneTime}" Stretch="UniformToFill" />
                         </Border>
                     </DataTemplate>
                 </local:DataTemplateSelector.Resources>
             </local:DataTemplateSelector>
+            </Viewbox>
         </DataTemplate>
     </phone:PhoneApplicationPage.Resources>
     <phone:PhoneApplicationPage.DataContext>

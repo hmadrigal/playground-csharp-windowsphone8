@@ -19,14 +19,16 @@ namespace HomeWork3
     {
         public const string ScreenPhotoStatsKeyName = @"__ScreenPhotoStatsKeyName__";
         public string Topic { get; set; }
-        public List<string> DownloadedExternalUrls { get; set; }
+        public List<PhotoItem> StoredPhotos { get; set; }
 
         public ScreenPhotoStats()
         {
-            Topic = @"Costa Rica"; //string.Empty;
-            DownloadedExternalUrls = new List<string>();
+            Topic = @"Love"; //string.Empty;
+            StoredPhotos = new List<PhotoItem>();
         }
     }
+
+
     public class MainPageViewModel : BindableBase
     {
         #region Title (INotifyPropertyChanged Property)
@@ -51,7 +53,7 @@ namespace HomeWork3
 
         public ICommand LoadCommand { get; private set; }
 
-        public List<PhotoItem> _photoResult;
+        List<PhotoItem> _requestedPhotoItems;
 
         public MainPageViewModel()
         {
@@ -74,45 +76,79 @@ namespace HomeWork3
         public void OnTransferCompletedChanged(Microsoft.Phone.BackgroundTransfer.BackgroundTransferRequest request)
         {
             var transferPayload = DisplayItems.OfType<TransferPayload>().FirstOrDefault(tp => tp.Tag == request.Tag);
-            var photoItem = _photoResult.FirstOrDefault(pr => pr.ExternalUrl == request.RequestUri.ToString());
-            if (transferPayload == null || photoItem == null)
+            var requestedPhotoItem = _requestedPhotoItems.OfType<PhotoItem>().FirstOrDefault(pr => pr.ExternalUrl == request.RequestUri.ToString());
+            if (transferPayload == null || requestedPhotoItem == null)
             {
                 return;
             }
-            transferPayload.Status = request.TransferStatus.ToString();
             DisplayItems.Remove(transferPayload);
-            DisplayItems.Add(photoItem);
+            requestedPhotoItem.LocalFilename = transferPayload.LocalUrl;
+            using (IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication())
+            {
+                var fileStream = isoStore.OpenFile(requestedPhotoItem.LocalFilename, System.IO.FileMode.Open);
+                requestedPhotoItem.SmallImage = GetBitmapSource(fileStream);
+            }
+            DisplayItems.Add(requestedPhotoItem);
+            System.Diagnostics.Debug.WriteLine("Pending Transfers Count: {0}", DisplayItems.OfType<TransferPayload>().Count());
         }
 
         private async void OnLoadCommandInvoked()
         {
             IsLoading = true;
+            DisplayItems.Clear();
+
             var screenPhotoStats = LoadFromIsoStore<ScreenPhotoStats>(ScreenPhotoStats.ScreenPhotoStatsKeyName, _ => new ScreenPhotoStats());
             Title = screenPhotoStats.Topic;
-            
-            DisplayItems.Clear();
-            List<object> addedItems = await Task.Run(async () =>
+
+            var addedItems = await Task.Run(async () =>
             {
                 List<object> newItems = new List<object>();
-                _photoResult = (await DataProvider.Instance.GetPhotos(screenPhotoStats.Topic, (stream) => null)).ToList();
-                foreach (var item in _photoResult)
+                List<PhotoItem> toRemove = new List<PhotoItem>();
+                using (IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication())
                 {
-                    var storedPhotoItem = DisplayItems.OfType<PhotoItem>().FirstOrDefault(p => p.ExternalUrl == item.ExternalUrl);
-                    if (storedPhotoItem == null)
+
+                    // get photo list from server
+                    _requestedPhotoItems = (await DataProvider.Instance.GetPhotos(screenPhotoStats.Topic, (stream) => null)).ToList();
+                    foreach (var requestedPhotoItem in _requestedPhotoItems)
                     {
-                        var transferPayload = new TransferPayload()
+                        // Is the item already downloaded?
+                        var localFilePath = TransferManager.Instance.GetFullTransferFilePath(requestedPhotoItem.LocalFilename);
+                        if (isoStore.FileExists(localFilePath))
                         {
-                            LocalUrl = TransferManager.Instance.GetFullTransferFilePath(item.LocalFilename),
-                            RemoteUrl = item.ExternalUrl,
-                            Tag = item.LocalFilename
-                        };
-                        newItems.Add(transferPayload);
-                        TransferManager.Instance.AddBackgroundTransfer(transferPayload);
+                            requestedPhotoItem.LocalFilename = localFilePath;
+                            newItems.Add(requestedPhotoItem);
+                            toRemove.Add(requestedPhotoItem);
+                        }
+                        else
+                        {
+                            var transferPayload = new TransferPayload()
+                            {
+                                Status = "Queued",
+                                LocalUrl = localFilePath,
+                                RemoteUrl = requestedPhotoItem.ExternalUrl,
+                                Tag = requestedPhotoItem.LocalFilename
+                            };
+                            newItems.Add(transferPayload);
+                            TransferManager.Instance.AddBackgroundTransfer(transferPayload);
+                        }
+                    }
+                    foreach (var item in toRemove)
+                    {
+                        _requestedPhotoItems.Remove(item);
                     }
                 }
                 return newItems;
             });
 
+            // Display the new Items (from disc or background transfer.
+            using (IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication())
+            {
+                foreach (var photoItem in addedItems.OfType<PhotoItem>())
+                {
+                    var fileStream = isoStore.OpenFile(photoItem.LocalFilename, System.IO.FileMode.Open);
+                    photoItem.SmallImage = GetBitmapSource(fileStream);
+                }
+            }
             foreach (var item in addedItems)
             {
                 DisplayItems.Add(item);
@@ -120,18 +156,23 @@ namespace HomeWork3
             IsLoading = false;
         }
 
+        internal static System.Windows.Media.Imaging.BitmapImage GetBitmapSource(System.IO.Stream stream)
+        {
+            System.Windows.Media.Imaging.BitmapImage bitmapSource = new System.Windows.Media.Imaging.BitmapImage();
+            bitmapSource.SetSource(stream);
+            return bitmapSource;
+        }
 
         internal void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
-            if (e.NavigationMode == System.Windows.Navigation.NavigationMode.Back)
-            {
-                return;
-            }
+
         }
 
         internal void OnNavigatingFrom(System.Windows.Navigation.NavigatingCancelEventArgs e)
         {
-            IsolatedStorageSettings.ApplicationSettings.Save();
+            var screenPhotoStats = LoadFromIsoStore<ScreenPhotoStats>(ScreenPhotoStats.ScreenPhotoStatsKeyName, _ => new ScreenPhotoStats());
+            screenPhotoStats.StoredPhotos = DisplayItems.OfType<PhotoItem>().ToList();
+            SaveToIsoStore(ScreenPhotoStats.ScreenPhotoStatsKeyName, screenPhotoStats);
         }
 
         internal static T LoadFromIsoStore<T>(string key, Func<string, T> defaultValue = null)
@@ -148,5 +189,7 @@ namespace HomeWork3
             IsolatedStorageSettings.ApplicationSettings[key] = value;
             IsolatedStorageSettings.ApplicationSettings.Save();
         }
+
+        
     }
 }

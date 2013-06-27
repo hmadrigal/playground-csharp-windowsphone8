@@ -89,72 +89,74 @@ namespace HomeWork2.Services
 
         public async Task<IEnumerable<PhotoItem>> GetPhotos(string queryTerm, Func<Stream, object> GetBitmapSource = null)
         {
-            return new List<PhotoItem>() { 
-                new PhotoItem()
-                {
-                     Id = "id",
-                     Owner = "owner",
-                     Secret = "secret",
-                     Server = "server",
-                     Farm = "farm",
-                     Title = "title",
-                     Ispublic = "ispublic",
-                     Isfriend = "isfriend",
-                     Isfamily = "isfamily",
-                     ExternalUrl = @"http://farm4.staticflickr.com/3282/2907613382_5063003552.jpg",
-                     LocalFilename = KeepStoredPolicyAccessor.Instance.GetFileKey(@"http://farm4.staticflickr.com/3282/2907613382_5063003552.jpg"),
-                     SmallImage = await GetImage(@"http://farm4.staticflickr.com/3282/2907613382_5063003552.jpg", GetBitmapSource),
-                },
-                new PhotoItem()
-                {
-                     Id = "id",
-                     Owner = "owner",
-                     Secret = "secret",
-                     Server = "server",
-                     Farm = "farm",
-                     Title = "title",
-                     Ispublic = "ispublic",
-                     Isfriend = "isfriend",
-                     Isfamily = "isfamily",
-                     ExternalUrl = @"http://farm4.staticflickr.com/3295/2906768529_90c011a5a4.jpg",
-                     LocalFilename = KeepStoredPolicyAccessor.Instance.GetFileKey(@"http://farm4.staticflickr.com/3295/2906768529_90c011a5a4.jpg"),
-                     SmallImage = await GetImage(@"http://farm4.staticflickr.com/3295/2906768529_90c011a5a4.jpg", GetBitmapSource),
-                }
-            };
-            //var uri = new Uri(string.Format(@"http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key={0}&text={1}&format=rest&per_page=25", ApiKeyFlickrCityExplorer, queryTerm));
-            //LifeTimePolicyAccessor.Instance.SetTimeToLive(uri, TimeSpan.FromMinutes(30));
-            //var contentStream = await ContentAccessors.Instance.GetContent(uri, LifeTimePolicyAccessor.Instance);
-            //XDocument document;
-            //using (StreamReader reader = new StreamReader(contentStream))
-            //{
-            //    document = XDocument.Load(reader);
-            //}
-            //List<PhotoItem> photoItems = new List<PhotoItem>();
-            //foreach (var photoElement in document.Root.Element("photos").Elements("photo"))
-            //{
-            //    var farm = (string)photoElement.Attribute("farm");
-            //    var server = (string)photoElement.Attribute("server");
-            //    var id = (string)photoElement.Attribute("id");
-            //    var secret = (string)photoElement.Attribute("secret");
-            //    var url = string.Format(@"http://farm{0}.staticflickr.com/{1}/{2}_{3}_z.jpg", farm, server, id, secret); ;
-            //    photoItems.Add(new PhotoItem()
-            //                 {
-            //                     Id = id,
-            //                     Owner = (string)photoElement.Attribute("owner"),
-            //                     Secret = secret,
-            //                     Server = server,
-            //                     Farm = farm,
-            //                     Title = (string)photoElement.Attribute("title"),
-            //                     Ispublic = (string)photoElement.Attribute("ispublic"),
-            //                     Isfriend = (string)photoElement.Attribute("isfriend"),
-            //                     Isfamily = (string)photoElement.Attribute("isfamily"),
-            //                     ExternalUrl = url,
-            //                     LocalFilename = KeepStoredPolicyAccessor.Instance.GetFileKey(url),
-            //                     SmallImage = await GetImage(url, GetBitmapSource),
-            //                 });
-            //}
+            //return new List<PhotoItem>() { 
+            //    new PhotoItem()
+            //    {
+            //         Id = "id",
+            //         Owner = "owner",
+            //         Secret = "secret",
+            //         Server = "server",
+            //         Farm = "farm",
+            //         Title = "title",
+            //         Ispublic = "ispublic",
+            //         Isfriend = "isfriend",
+            //         Isfamily = "isfamily",
+            //         ExternalUrl = @"http://farm4.staticflickr.com/3282/2907613382_5063003552.jpg",
+            //         LocalFilename = KeepStoredPolicyAccessor.Instance.GetFileKey(@"http://farm4.staticflickr.com/3282/2907613382_5063003552.jpg"),
+            //         SmallImage = await GetImage(@"http://farm4.staticflickr.com/3282/2907613382_5063003552.jpg", GetBitmapSource),
+            //    },
+            //    new PhotoItem()
+            //    {
+            //         Id = "id",
+            //         Owner = "owner",
+            //         Secret = "secret",
+            //         Server = "server",
+            //         Farm = "farm",
+            //         Title = "title",
+            //         Ispublic = "ispublic",
+            //         Isfriend = "isfriend",
+            //         Isfamily = "isfamily",
+            //         ExternalUrl = @"http://farm4.staticflickr.com/3295/2906768529_90c011a5a4.jpg",
+            //         LocalFilename = KeepStoredPolicyAccessor.Instance.GetFileKey(@"http://farm4.staticflickr.com/3295/2906768529_90c011a5a4.jpg"),
+            //         SmallImage = await GetImage(@"http://farm4.staticflickr.com/3295/2906768529_90c011a5a4.jpg", GetBitmapSource),
+            //    }
+            //};
 
-            //return photoItems;
+
+            var uri = new Uri(string.Format(@"http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key={0}&text={1}&format=rest&per_page=15", ApiKeyFlickrCityExplorer, queryTerm));
+            LifeTimePolicyAccessor.Instance.SetTimeToLive(uri, TimeSpan.FromMinutes(30));
+            var contentStream = await ContentAccessors.Instance.GetContent(uri, LifeTimePolicyAccessor.Instance);
+            XDocument document;
+            using (StreamReader reader = new StreamReader(contentStream))
+            {
+                document = XDocument.Load(reader);
+            }
+            List<PhotoItem> photoItems = new List<PhotoItem>();
+            foreach (var photoElement in document.Root.Element("photos").Elements("photo"))
+            {
+                var farm = (string)photoElement.Attribute("farm");
+                var server = (string)photoElement.Attribute("server");
+                var id = (string)photoElement.Attribute("id");
+                var secret = (string)photoElement.Attribute("secret");
+                var url = string.Format(@"http://farm{0}.staticflickr.com/{1}/{2}_{3}_z.jpg", farm, server, id, secret); ;
+                photoItems.Add(new PhotoItem()
+                             {
+                                 Id = id,
+                                 Owner = (string)photoElement.Attribute("owner"),
+                                 Secret = secret,
+                                 Server = server,
+                                 Farm = farm,
+                                 Title = (string)photoElement.Attribute("title"),
+                                 Ispublic = (string)photoElement.Attribute("ispublic"),
+                                 Isfriend = (string)photoElement.Attribute("isfriend"),
+                                 Isfamily = (string)photoElement.Attribute("isfamily"),
+                                 ExternalUrl = url,
+                                 LocalFilename = KeepStoredPolicyAccessor.Instance.GetFileKey(url),
+                                 SmallImage = await GetImage(url, GetBitmapSource),
+                             });
+            }
+
+            return photoItems;
         }
 
         private async static Task<object> GetImage(string url, Func<Stream, object> GetBitmapSource = null)
