@@ -83,11 +83,15 @@ namespace HomeWork3
             }
             DisplayItems.Remove(transferPayload);
             requestedPhotoItem.LocalFilename = transferPayload.LocalUrl;
-            using (IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication())
+            try
             {
-                var fileStream = isoStore.OpenFile(requestedPhotoItem.LocalFilename, System.IO.FileMode.Open);
-                requestedPhotoItem.SmallImage = GetBitmapSource(fileStream);
+                using (IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication())
+                {
+                    var fileStream = isoStore.OpenFile(requestedPhotoItem.LocalFilename, System.IO.FileMode.Open);
+                    requestedPhotoItem.SmallImage = GetBitmapSource(fileStream);
+                }
             }
+            catch { }
             DisplayItems.Add(requestedPhotoItem);
             System.Diagnostics.Debug.WriteLine("Pending Transfers Count: {0}", DisplayItems.OfType<TransferPayload>().Count());
         }
@@ -145,8 +149,12 @@ namespace HomeWork3
             {
                 foreach (var photoItem in addedItems.OfType<PhotoItem>())
                 {
-                    var fileStream = isoStore.OpenFile(photoItem.LocalFilename, System.IO.FileMode.Open);
-                    photoItem.SmallImage = GetBitmapSource(fileStream);
+                    try
+                    {
+                        var fileStream = isoStore.OpenFile(photoItem.LocalFilename, System.IO.FileMode.Open);
+                        photoItem.SmallImage = GetBitmapSource(fileStream);
+                    }
+                    catch { }
                 }
             }
             foreach (var item in addedItems)
