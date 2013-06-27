@@ -8,6 +8,7 @@ using System.IO.IsolatedStorage;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Microsoft.Phone.Reactive;
 
 namespace HomeWork3
 {
@@ -30,6 +31,17 @@ namespace HomeWork3
         }
         private string _localUrl;
         #endregion
+
+        #region Status (INotifyPropertyChanged Property)
+        public string Status
+        {
+            get { return _status; }
+            set { SetProperty(ref _status, value); }
+        }
+        private string _status;
+        #endregion        
+
+        public string Tag { get; set; }
 
         /// <summary>
         /// Multicast event for property change notifications.
@@ -91,44 +103,51 @@ namespace HomeWork3
 
     public sealed class TransferManager
     {
-        public ObservableCollection<TransferPayload> CurrentTransfers
-        {
-            get { return _currentTransfers ?? (_currentTransfers = Load(TransferManagerListKeyName, _ => new ObservableCollection<TransferPayload>())); }
-        }
-        private ObservableCollection<TransferPayload> _currentTransfers;
+        //public List<TransferPayload> CurrentTransfers { get; private set; }
 
-        private readonly string TransferManagerListKeyName = @"__TransferManagerListKey__";
+        private readonly Subject<BackgroundTransferRequest> _transferStatusChanged = new Subject<BackgroundTransferRequest>();
+        private readonly Subject<BackgroundTransferRequest> _transferProgressChanged = new Subject<BackgroundTransferRequest>();
 
-        private void Save<T>(string key, T item)
+        public IDisposable SubscribeToProgress(Action<BackgroundTransferRequest> onNext, Func<BackgroundTransferRequest, bool> filter = null)
         {
-            IsolatedStorageSettings.ApplicationSettings[key] = item;
-            IsolatedStorageSettings.ApplicationSettings.Save();
-        }
-
-        private T Load<T>(string key, Func<string, T> defaultValue = null)
-        {
-            if (defaultValue == null)
+            IObservable<BackgroundTransferRequest> token = _transferProgressChanged;
+            if (filter != null)
             {
-                defaultValue = (s) => default(T);
+                token = _transferProgressChanged.Where(filter);
             }
-            return IsolatedStorageSettings.ApplicationSettings.Contains(key) ? (T)IsolatedStorageSettings.ApplicationSettings[key] : defaultValue(key);
+            return token.Subscribe(onNext);
+        }
+        public IDisposable SubscribeToStatus(Action<BackgroundTransferRequest> onNext, Func<BackgroundTransferRequest, bool> filter = null)
+        {
+            IObservable<BackgroundTransferRequest> token = _transferStatusChanged;
+            if (filter != null)
+            {
+                token = _transferStatusChanged.Where(filter);
+            }
+            return token.Subscribe(onNext);
         }
 
         public void AddBackgroundTransfer(params TransferPayload[] transferPayloads)
         {
             foreach (var transferPayload in transferPayloads)
             {
-                if (CurrentTransfers.Any(mr => mr.RemoteUrl == transferPayload.RemoteUrl))
-                {
-                    continue;
-                }
+                //if (CurrentTransfers.Any(mr => mr.RemoteUrl == transferPayload.RemoteUrl))
+                //{
+                //    continue;
+                //}
                 var request = new BackgroundTransferRequest(new Uri(transferPayload.RemoteUrl), new Uri(transferPayload.LocalUrl, UriKind.RelativeOrAbsolute));
-                System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() => { CurrentTransfers.Add(transferPayload); });
-                BackgroundTransferService.Add(request);
+                //CurrentTransfers.Add(transferPayload);
+                request.Tag = transferPayload.Tag;
                 request.TransferProgressChanged += OnRequestTransferProgressChanged;
                 request.TransferStatusChanged += OnRequestTransferStatusChanged;
+                BackgroundTransferService.Add(request);
+                
             }
-            Save(TransferManagerListKeyName, CurrentTransfers);
+        }
+
+        public string GetFullTransferFilePath(string relativeFilePath)
+        {
+            return System.IO.Path.Combine("/shared/transfers/", relativeFilePath);
         }
 
         private void AttachEventsToBackgroundTransfers()
@@ -151,22 +170,17 @@ namespace HomeWork3
 
         private void OnRequestTransferStatusChanged(object sender, BackgroundTransferEventArgs e)
         {
-
-        }
-
-        private void OnRequestTransferProgressChanged(object sender, BackgroundTransferEventArgs e)
-        {
+            _transferStatusChanged.OnNext(e.Request);
             switch (e.Request.TransferStatus)
             {
                 case TransferStatus.Completed:
-                    var foundRequest = CurrentTransfers.FirstOrDefault(request => request.LocalUrl == e.Request.DownloadLocation.ToString());
-                    if (foundRequest != null)
-                    {
-                        System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() => { CurrentTransfers.Remove(foundRequest); });
-                        Save(TransferManagerListKeyName, CurrentTransfers);
-                    }
+                    //var foundRequest = CurrentTransfers.FirstOrDefault(request => request.LocalUrl == e.Request.DownloadLocation.ToString());
+                    //if (foundRequest != null)
+                    //{
+                    //    CurrentTransfers.Remove(foundRequest);
+                    //}
+                    BackgroundTransferService.Remove(e.Request);
                     e.Request.Dispose();
-                    //BackgroundTransferService.Remove(e.Request);
                     break;
                 case TransferStatus.None:
                     break;
@@ -189,6 +203,11 @@ namespace HomeWork3
                 default:
                     break;
             }
+        }
+
+        private void OnRequestTransferProgressChanged(object sender, BackgroundTransferEventArgs e)
+        {
+            _transferProgressChanged.OnNext(e.Request);
         }
 
         private void InitializeTransferManager()

@@ -15,6 +15,18 @@ using Windows.Phone.System.UserProfile;
 
 namespace HomeWork3
 {
+    public class ScreenPhotoStats
+    {
+        public const string ScreenPhotoStatsKeyName = @"__ScreenPhotoStatsKeyName__";
+        public string Topic { get; set; }
+        public List<string> DownloadedExternalUrls { get; set; }
+
+        public ScreenPhotoStats()
+        {
+            Topic = @"Costa Rica"; //string.Empty;
+            DownloadedExternalUrls = new List<string>();
+        }
+    }
     public class MainPageViewModel : BindableBase
     {
         #region Title (INotifyPropertyChanged Property)
@@ -35,133 +47,106 @@ namespace HomeWork3
         private bool _isLoading;
         #endregion
 
-        public TransferManager TransferManager { get { return TransferManager.Instance; } }
-
-        private readonly Random _random = new Random();
-
-        public string Topic
-        {
-            get { return IsolatedStorageSettings.ApplicationSettings[CycleTileScheduledAgent.TopicKeyName] as string; }
-            set
-            {
-                IsolatedStorageSettings.ApplicationSettings[CycleTileScheduledAgent.TopicKeyName] = value;
-                IsolatedStorageSettings.ApplicationSettings.Save();
-                RaisePropertyChanged(CycleTileScheduledAgent.TopicKeyName);
-            }
-        }
-
-        public ObservableCollection<PhotoItem> Photos { get; private set; }
+        public ObservableCollection<Object> DisplayItems { get; private set; }
 
         public ICommand LoadCommand { get; private set; }
 
+        public List<PhotoItem> _photoResult;
 
         public MainPageViewModel()
         {
-            Photos = new ObservableCollection<PhotoItem>();
+            DisplayItems = new ObservableCollection<Object>();
             LoadCommand = new RelayCommand(OnLoadCommandInvoked);
-            if (!IsolatedStorageSettings.ApplicationSettings.Contains(CycleTileScheduledAgent.TopicKeyName))
+            TransferManager.Instance.SubscribeToProgress(OnTransferProgressChanged);
+            TransferManager.Instance.SubscribeToStatus(OnTransferCompletedChanged, bt => bt.TransferStatus == Microsoft.Phone.BackgroundTransfer.TransferStatus.Completed);
+        }
+
+        public void OnTransferProgressChanged(Microsoft.Phone.BackgroundTransfer.BackgroundTransferRequest request)
+        {
+            var transferPayload = DisplayItems.OfType<TransferPayload>().FirstOrDefault(tp => tp.Tag == request.Tag);
+            if (transferPayload == null)
             {
-                IsolatedStorageSettings.ApplicationSettings[CycleTileScheduledAgent.TopicKeyName] = "Costa Rica";
-                IsolatedStorageSettings.ApplicationSettings.Save();
+                return;
             }
+            transferPayload.Status = string.Format("[{0}] Transfered: {1}kp", request.TransferStatus.ToString(), request.BytesReceived / 1024);
+        }
+
+        public void OnTransferCompletedChanged(Microsoft.Phone.BackgroundTransfer.BackgroundTransferRequest request)
+        {
+            var transferPayload = DisplayItems.OfType<TransferPayload>().FirstOrDefault(tp => tp.Tag == request.Tag);
+            var photoItem = _photoResult.FirstOrDefault(pr => pr.ExternalUrl == request.RequestUri.ToString());
+            if (transferPayload == null || photoItem == null)
+            {
+                return;
+            }
+            transferPayload.Status = request.TransferStatus.ToString();
+            DisplayItems.Remove(transferPayload);
+            DisplayItems.Add(photoItem);
         }
 
         private async void OnLoadCommandInvoked()
         {
             IsLoading = true;
-            Title = Topic;
-
-            Photos.Clear();
-            await Task.Run(async () =>
+            var screenPhotoStats = LoadFromIsoStore<ScreenPhotoStats>(ScreenPhotoStats.ScreenPhotoStatsKeyName, _ => new ScreenPhotoStats());
+            Title = screenPhotoStats.Topic;
+            
+            DisplayItems.Clear();
+            List<object> addedItems = await Task.Run(async () =>
             {
-                var photoResult = await DataProvider.Instance.GetPhotos(Topic, (stream) => null);
-                foreach (var item in photoResult)
+                List<object> newItems = new List<object>();
+                _photoResult = (await DataProvider.Instance.GetPhotos(screenPhotoStats.Topic, (stream) => null)).ToList();
+                foreach (var item in _photoResult)
                 {
-                    TransferManager.Instance.AddBackgroundTransfer(
-                        new TransferPayload()
+                    var storedPhotoItem = DisplayItems.OfType<PhotoItem>().FirstOrDefault(p => p.ExternalUrl == item.ExternalUrl);
+                    if (storedPhotoItem == null)
+                    {
+                        var transferPayload = new TransferPayload()
                         {
-                            LocalUrl = "/shared/transfers/" + item.LocalFilename,
+                            LocalUrl = TransferManager.Instance.GetFullTransferFilePath(item.LocalFilename),
                             RemoteUrl = item.ExternalUrl,
-                        }
-                    );
+                            Tag = item.LocalFilename
+                        };
+                        newItems.Add(transferPayload);
+                        TransferManager.Instance.AddBackgroundTransfer(transferPayload);
+                    }
                 }
+                return newItems;
             });
 
-
-            //await DownloadPicturesAsync(Topic);
-            //if (Photos.Count == 0)
-            //{
-            //    IsLoading = false;
-            //    return;
-            //}
-            //else if (Photos.Count <= 9)
-            //{
-            //    await UpdateTileDate(Photos);
-            //    try
-            //    {
-            //        await LockManager.Instance.LockScreenChange(Photos[_random.Next(Photos.Count)].LocalFilename);
-            //    }
-            //    catch { }
-            //}
-            //else
-            //{
-            //    var photos = Photos.Skip(Photos.Count - 9);
-            //    await UpdateTileDate(photos.ToList());
-            //    try
-            //    {
-            //        await LockManager.Instance.LockScreenChange(Photos[_random.Next(Photos.Count)].LocalFilename);
-            //    }
-            //    catch { }
-            //}
+            foreach (var item in addedItems)
+            {
+                DisplayItems.Add(item);
+            }
             IsLoading = false;
         }
 
-        //private async Task UpdateTileDate(IEnumerable<PhotoItem> photos)
-        //{
-        //    if (photos == null || !photos.Any())
-        //    {
-        //        return;
-        //    }
 
-        //    var photoUris = photos.Select(pi => new Uri(pi.ExternalUrl, UriKind.RelativeOrAbsolute)).ToArray();
-        //    for (int i = 0; i < photoUris.Length; i++)
-        //    {
-        //        LifeTimePolicyAccessor.Instance.SetTimeToLive(photoUris[i], TimeSpan.FromMinutes(30));
-        //        var photoStream = await ContentAccessors.Instance.GetContent(photoUris[i], LifeTimePolicyAccessor.Instance);
-        //        var fileName = string.Concat("CycleTileDataImg", i);
-        //        await TileManager.Instance.SaveToSharedShellDirectory(fileName, photoStream);
-        //        photoUris[i] = new Uri(TileManager.Instance.GetShellDirectoryFilePath(fileName), UriKind.RelativeOrAbsolute);
-        //    }
+        internal void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
+        {
+            if (e.NavigationMode == System.Windows.Navigation.NavigationMode.Back)
+            {
+                return;
+            }
+        }
 
-        //    CycleTileData oCycleicon = new CycleTileData();
-        //    oCycleicon.SmallBackgroundImage = new Uri("Photovoltaic-Panel.png", UriKind.Relative);
-        //    // Images could be max Nine images.
-        //    oCycleicon.CycleImages = photoUris;
-        //    oCycleicon.Count = photoUris.Length;
-        //    oCycleicon.Title = Topic; //DateTime.Now.ToString("o"); //string.Concat("New ", photoUris.Length, " pics!"); ;
-        //    TileManager.Instance.SetApplicationTileData(oCycleicon);
-        //}
+        internal void OnNavigatingFrom(System.Windows.Navigation.NavigatingCancelEventArgs e)
+        {
+            IsolatedStorageSettings.ApplicationSettings.Save();
+        }
 
-        //public async Task DownloadPicturesAsync(string queryTerm)
-        //{
-        //    //await Task.Run(async () =>
-        //    //{
-        //    Photos.Clear();
-        //    var photoResult = await DataProvider.Instance.GetPhotos(queryTerm, GetBitmapSource);
-        //    foreach (var item in photoResult)
-        //    {
-        //        Photos.Add(item);
-        //    }
-        //    //});
-        //}
+        internal static T LoadFromIsoStore<T>(string key, Func<string, T> defaultValue = null)
+        {
+            if (defaultValue == null)
+            {
+                defaultValue = _ => default(T);
+            }
+            return IsolatedStorageSettings.ApplicationSettings.Contains(key) ? (T)IsolatedStorageSettings.ApplicationSettings[key] : defaultValue(key);
+        }
 
-        //public System.Windows.Media.Imaging.BitmapImage GetBitmapSource(System.IO.Stream stream)
-        //{
-        //    System.Windows.Media.Imaging.BitmapImage bitmapSource = new System.Windows.Media.Imaging.BitmapImage();
-        //    bitmapSource.SetSource(stream);
-        //    return bitmapSource;
-        //}
-
-
+        internal static void SaveToIsoStore<T>(string key, T value)
+        {
+            IsolatedStorageSettings.ApplicationSettings[key] = value;
+            IsolatedStorageSettings.ApplicationSettings.Save();
+        }
     }
 }

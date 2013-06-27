@@ -16,6 +16,7 @@ namespace HomeWork2.Models
         public string Ispublic { get; set; }
         public string Isfriend { get; set; }
         public string Isfamily { get; set; }
+        [System.Runtime.Serialization.IgnoreDataMember]
         public object SmallImage { get; set; }
         public String ExternalUrl { get; set; }
         public string LocalFilename { get; set; }
