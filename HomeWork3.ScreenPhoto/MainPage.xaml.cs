@@ -22,18 +22,11 @@ namespace HomeWork3
         {
             InitializeComponent();
 
-            Loaded += MainPage_Loaded;
+            StartPeriodicAgent();
 
 #if !DEBUG
             ContentPanel.Children.Remove(StartBackgroundWork);   
 #endif
-        }
-
-        void MainPage_Loaded(object sender, RoutedEventArgs e)
-        {
-            Loaded -= MainPage_Loaded;
-            View.LoadCommand.Execute(null);
-            StartPeriodicAgent();
         }
 
         private void StartPeriodicAgent()

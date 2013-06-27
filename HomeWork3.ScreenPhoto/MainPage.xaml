@@ -86,8 +86,7 @@
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
             <TextBlock Text="SCREEN PHOTO" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <HyperlinkButton Margin="9,-7,0,0" Template="{StaticResource EmptyControlTemplate}">
-                <!--NavigateUri="/ConfigPage.xaml" -->
+            <HyperlinkButton Margin="9,-7,0,0" Template="{StaticResource EmptyControlTemplate}" NavigateUri="/ConfigPage.xaml">
                 <TextBlock Text="{Binding Title}" Style="{StaticResource PhoneTextTitle1Style}"/>
             </HyperlinkButton>
         </StackPanel>

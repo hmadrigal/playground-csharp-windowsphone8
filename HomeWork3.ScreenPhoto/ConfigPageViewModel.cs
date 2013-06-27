@@ -12,29 +12,26 @@ namespace HomeWork3
 {
     public class ConfigPageViewModel : BindableBase
     {
-
+        #region Topic (INotifyPropertyChanged Property)
         public string Topic
         {
-            get { return IsolatedStorageSettings.ApplicationSettings[CycleTileScheduledAgent.TopicKeyName] as string; }
-            set {
-                IsolatedStorageSettings.ApplicationSettings[CycleTileScheduledAgent.TopicKeyName] = value;
-                IsolatedStorageSettings.ApplicationSettings.Save();
-            }
+            get { return _topic; }
+            set { SetProperty(ref _topic, value); }
         }
+        private string _topic;
+        #endregion
 
-        public ObservableCollection<PhotoItem> Photos { get; private set; }
-
-        public ICommand LoadCommand { get; private set; }
-        
-
-        public ConfigPageViewModel()
+        internal void OnNavigatedFrom(System.Windows.Navigation.NavigationEventArgs e)
         {
-            LoadCommand = new RelayCommand(OnLoadCommandInvoked);
+            var screenPhotoStats = IsoStoreHelper.LoadFromIsoStore<ScreenPhotoStats>(ScreenPhotoStats.ScreenPhotoStatsKeyName, _ => new ScreenPhotoStats());
+            screenPhotoStats.Topic = Topic;
+            IsoStoreHelper.SaveToIsoStore(ScreenPhotoStats.ScreenPhotoStatsKeyName, screenPhotoStats);
         }
 
-        private async void OnLoadCommandInvoked()
+        internal void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
+            var screenPhotoStats = IsoStoreHelper.LoadFromIsoStore<ScreenPhotoStats>(ScreenPhotoStats.ScreenPhotoStatsKeyName, _ => new ScreenPhotoStats());
+            Topic = screenPhotoStats.Topic;
         }
-
     }
 }

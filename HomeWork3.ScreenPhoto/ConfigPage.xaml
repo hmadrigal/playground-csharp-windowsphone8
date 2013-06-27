@@ -15,7 +15,7 @@
     xmlns:ViewModels="clr-namespace:HomeWork3"
     >
     <phone:PhoneApplicationPage.Resources>
-        <ViewModels:MainPageViewModel x:Key="ViewModel" />
+        <ViewModels:ConfigPageViewModel x:Key="ViewModel" />
     </phone:PhoneApplicationPage.Resources>
 
     <phone:PhoneApplicationPage.DataContext>
@@ -37,7 +37,7 @@
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <TextBox Text="{Binding Topic,Mode=TwoWay}" />
+            <TextBox Text="{Binding Topic,Mode=TwoWay}" VerticalAlignment="Top" />
         </Grid>
     </Grid>
 

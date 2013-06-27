@@ -51,14 +51,11 @@ namespace HomeWork3
 
         public ObservableCollection<Object> DisplayItems { get; private set; }
 
-        public ICommand LoadCommand { get; private set; }
-
         List<PhotoItem> _requestedPhotoItems;
 
         public MainPageViewModel()
         {
             DisplayItems = new ObservableCollection<Object>();
-            LoadCommand = new RelayCommand(OnLoadCommandInvoked);
             TransferManager.Instance.SubscribeToProgress(OnTransferProgressChanged);
             TransferManager.Instance.SubscribeToStatus(OnTransferCompletedChanged, bt => bt.TransferStatus == Microsoft.Phone.BackgroundTransfer.TransferStatus.Completed);
         }
@@ -96,14 +93,14 @@ namespace HomeWork3
             System.Diagnostics.Debug.WriteLine("Pending Transfers Count: {0}", DisplayItems.OfType<TransferPayload>().Count());
         }
 
-        private async void OnLoadCommandInvoked()
+        private async void LoadContent()
         {
             IsLoading = true;
             DisplayItems.Clear();
 
-            var screenPhotoStats = LoadFromIsoStore<ScreenPhotoStats>(ScreenPhotoStats.ScreenPhotoStatsKeyName, _ => new ScreenPhotoStats());
+            var screenPhotoStats = IsoStoreHelper.LoadFromIsoStore<ScreenPhotoStats>(ScreenPhotoStats.ScreenPhotoStatsKeyName, _ => new ScreenPhotoStats());
             Title = screenPhotoStats.Topic;
-
+            var hasReachedTheLimit = false;
             var addedItems = await Task.Run(async () =>
             {
                 List<object> newItems = new List<object>();
@@ -133,7 +130,15 @@ namespace HomeWork3
                                 Tag = requestedPhotoItem.LocalFilename
                             };
                             newItems.Add(transferPayload);
-                            TransferManager.Instance.AddBackgroundTransfer(transferPayload);
+                            try
+                            {
+                                TransferManager.Instance.AddBackgroundTransfer(transferPayload);
+                            }
+                            catch
+                            {
+                                hasReachedTheLimit = true;
+
+                            }
                         }
                     }
                     foreach (var item in toRemove)
@@ -161,6 +166,10 @@ namespace HomeWork3
             {
                 DisplayItems.Add(item);
             }
+            if (hasReachedTheLimit)
+            {
+                System.Windows.MessageBox.Show("You have reached the limit of background downloads, please try again later once the downloads are done.");
+            }
             IsLoading = false;
         }
 
@@ -173,31 +182,18 @@ namespace HomeWork3
 
         internal void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
-
+            LoadContent();
         }
 
         internal void OnNavigatingFrom(System.Windows.Navigation.NavigatingCancelEventArgs e)
         {
-            var screenPhotoStats = LoadFromIsoStore<ScreenPhotoStats>(ScreenPhotoStats.ScreenPhotoStatsKeyName, _ => new ScreenPhotoStats());
+            var screenPhotoStats = IsoStoreHelper.LoadFromIsoStore<ScreenPhotoStats>(ScreenPhotoStats.ScreenPhotoStatsKeyName, _ => new ScreenPhotoStats());
             screenPhotoStats.StoredPhotos = DisplayItems.OfType<PhotoItem>().ToList();
-            SaveToIsoStore(ScreenPhotoStats.ScreenPhotoStatsKeyName, screenPhotoStats);
+            IsoStoreHelper.SaveToIsoStore(ScreenPhotoStats.ScreenPhotoStatsKeyName, screenPhotoStats);
         }
 
-        internal static T LoadFromIsoStore<T>(string key, Func<string, T> defaultValue = null)
-        {
-            if (defaultValue == null)
-            {
-                defaultValue = _ => default(T);
-            }
-            return IsolatedStorageSettings.ApplicationSettings.Contains(key) ? (T)IsolatedStorageSettings.ApplicationSettings[key] : defaultValue(key);
-        }
 
-        internal static void SaveToIsoStore<T>(string key, T value)
-        {
-            IsolatedStorageSettings.ApplicationSettings[key] = value;
-            IsolatedStorageSettings.ApplicationSettings.Save();
-        }
 
-        
+
     }
 }
