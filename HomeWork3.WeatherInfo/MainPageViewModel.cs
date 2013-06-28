@@ -12,21 +12,12 @@ using System.Collections.Generic;
 using Microsoft.Phone.Shell;
 using Windows.Phone.System.UserProfile;
 using HomeWork3.WeatherInfo;
+using HomeWork3.NotifyScheduleTaskAgent;
 
 namespace HomeWork3
 {
     public class MainPageViewModel : BindableBase
     {
-        public SearchApiResultItem SelectedCity
-        {
-            get { return IsolatedStorageSettings.ApplicationSettings[App.CityInfoKeyName] as SearchApiResultItem; }
-            set
-            {
-                IsolatedStorageSettings.ApplicationSettings[App.CityInfoKeyName] = value;
-                IsolatedStorageSettings.ApplicationSettings.Save();
-                RaisePropertyChanged(App.CityInfoKeyName);
-            }
-        }
 
         #region CityName (INotifyPropertyChanged Property)
         public string CityName
@@ -57,33 +48,17 @@ namespace HomeWork3
 
         public ObservableCollection<WeatheForecastItem> WeatherForecast { get; private set; }
 
-        public ICommand ViewLoadedCommand { get; private set; }
-
         public MainPageViewModel()
         {
-            ViewLoadedCommand = new RelayCommand(OnViewLoadedCommandInvoked);
             WeatherForecast = new ObservableCollection<WeatheForecastItem>();
-            if (!IsolatedStorageSettings.ApplicationSettings.Contains(App.CityInfoKeyName))
-            {
-                SelectedCity = new SearchApiResultItem()
-                {
-                    AreaName = "San Jose",
-                    Country = "Costa Rica",
-                    Latitude = 9.933,
-                    Longitude = -84.083,
-                    Region = "San Jose",
-                    WeatherUrl = 0.0,
-                };
-            }
         }
 
-        private async void OnViewLoadedCommandInvoked()
+        private async void LoadContent()
         {
-
+            var weatherStats = IsoStoreHelper.LoadFromIsoStore<WeatherStats>(WeatherStats.WeatherSettingsKeyName, (k) => new WeatherStats());
             IsLoading = true;
-            RaisePropertyChanged(App.CityInfoKeyName);
-            CityName = string.Concat(SelectedCity.AreaName, ", ", SelectedCity.Country);
-            var weatherResult = await DataProvider.Instance.GetWeatherResults(SelectedCity.Latitude, SelectedCity.Longitude);
+            CityName = string.Concat(weatherStats.SelectedCity.AreaName, ", ", weatherStats.SelectedCity.Country);
+            var weatherResult = await DataProvider.Instance.GetWeatherResults(weatherStats.SelectedCity.Latitude, weatherStats.SelectedCity.Longitude);
             foreach (var item in weatherResult.Item2)
             {
                 WeatherForecast.Add(item);
@@ -91,6 +66,11 @@ namespace HomeWork3
             CurrentWeather = weatherResult.Item1;
             IsLoading = false;
 
+        }
+
+        internal void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
+        {
+            LoadContent();
         }
     }
 }

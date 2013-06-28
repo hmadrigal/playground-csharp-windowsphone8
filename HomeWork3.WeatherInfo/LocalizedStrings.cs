@@ -1,5 +1,5 @@
-﻿using HomeWork3.WeatherInfo.Resources;
-
+﻿
+using HomeWork3.Resources;
 namespace HomeWork3.WeatherInfo
 {
     /// <summary>

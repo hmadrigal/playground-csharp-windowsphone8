@@ -8,21 +8,12 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Linq;
 using HomeWork3.WeatherInfo;
+using HomeWork3.NotifyScheduleTaskAgent;
 
 namespace HomeWork3
 {
     public class ConfigPageViewModel : BindableBase
     {
-        public SearchApiResultItem SelectedCity
-        {
-            get { return IsolatedStorageSettings.ApplicationSettings[App.CityInfoKeyName] as SearchApiResultItem; }
-            set
-            {
-                IsolatedStorageSettings.ApplicationSettings[App.CityInfoKeyName] = value;
-                IsolatedStorageSettings.ApplicationSettings.Save();
-                RaisePropertyChanged(App.CityInfoKeyName);
-            }
-        }
 
         #region IsLoading (INotifyPropertyChanged Property)
         public bool IsLoading
@@ -56,7 +47,8 @@ namespace HomeWork3
                 (cityName) => !string.IsNullOrEmpty(cityName) && cityName.Length > 3);
 
             SelectCityCommand = new RelayCommand<SearchApiResultItem>(OnSelectCityCommandInvoked);
-            CityName = string.Concat(SelectedCity.AreaName, ", ", SelectedCity.Country);
+            var weatherStats = IsoStoreHelper.LoadFromIsoStore<WeatherStats>(WeatherStats.WeatherSettingsKeyName, (k) => new WeatherStats());
+            CityName = string.Concat(weatherStats.SelectedCity.AreaName, ", ", weatherStats.SelectedCity.Country);
         }
 
         private async void OnSearchCityCommandInvoked(string cityName)
@@ -78,8 +70,10 @@ namespace HomeWork3
                 return;
             }
             SearchResults.Clear();
-            SelectedCity = selectedSearchApiResultItem;
-            CityName = string.Concat(SelectedCity.AreaName, ", ", SelectedCity.Country);
+            var weatherStats = IsoStoreHelper.LoadFromIsoStore<WeatherStats>(WeatherStats.WeatherSettingsKeyName, (k) => new WeatherStats());
+            weatherStats.SelectedCity = selectedSearchApiResultItem;
+            IsoStoreHelper.SaveToIsoStore(WeatherStats.WeatherSettingsKeyName, weatherStats);
+            CityName = string.Concat(weatherStats.SelectedCity.AreaName, ", ", weatherStats.SelectedCity.Country);
             var phoneApplicationFrame = (App.Current.RootVisual as Microsoft.Phone.Controls.PhoneApplicationFrame);
             if (phoneApplicationFrame != null && phoneApplicationFrame.CanGoBack)
             {
