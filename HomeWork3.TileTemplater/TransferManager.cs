@@ -39,7 +39,7 @@ namespace HomeWork3
             set { SetProperty(ref _status, value); }
         }
         private string _status;
-        #endregion        
+        #endregion
 
         public string Tag { get; set; }
 
@@ -141,13 +141,29 @@ namespace HomeWork3
                 request.TransferProgressChanged += OnRequestTransferProgressChanged;
                 request.TransferStatusChanged += OnRequestTransferStatusChanged;
                 BackgroundTransferService.Add(request);
-                
+
             }
         }
 
         public string GetFullTransferFilePath(string relativeFilePath)
         {
             return System.IO.Path.Combine("/shared/transfers/", relativeFilePath);
+        }
+
+        public void CancelAll()
+        {
+            DettachEventsToBackgroundTransfers();
+            var requests = BackgroundTransferService.Requests.ToArray();
+            for (int i = 0; i < requests.Length; i++)
+            {
+
+                try
+                {
+                    BackgroundTransferService.Remove(requests[i]);
+                    requests[i].Dispose();
+                }
+                catch { }
+            }
         }
 
         private void AttachEventsToBackgroundTransfers()
@@ -174,13 +190,12 @@ namespace HomeWork3
             switch (e.Request.TransferStatus)
             {
                 case TransferStatus.Completed:
-                    //var foundRequest = CurrentTransfers.FirstOrDefault(request => request.LocalUrl == e.Request.DownloadLocation.ToString());
-                    //if (foundRequest != null)
-                    //{
-                    //    CurrentTransfers.Remove(foundRequest);
-                    //}
-                    BackgroundTransferService.Remove(e.Request);
-                    e.Request.Dispose();
+                    try
+                    {
+                        BackgroundTransferService.Remove(e.Request);
+                        e.Request.Dispose();
+                    }
+                    catch { }
                     break;
                 case TransferStatus.None:
                     break;

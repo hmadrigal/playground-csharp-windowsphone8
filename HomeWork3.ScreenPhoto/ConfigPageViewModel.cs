@@ -30,6 +30,7 @@ namespace HomeWork3
 
         internal void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
+            TransferManager.Instance.CancelAll();
             var screenPhotoStats = IsoStoreHelper.LoadFromIsoStore<ScreenPhotoStats>(ScreenPhotoStats.ScreenPhotoStatsKeyName, _ => new ScreenPhotoStats());
             Topic = screenPhotoStats.Topic;
         }
