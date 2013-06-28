@@ -84,6 +84,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\HomeWork3.ScreenPhoto\IsoStoreHelper.cs">
+      <Link>IsoStoreHelper.cs</Link>
+    </Compile>
     <Compile Include="CycleTileScheduledAgent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

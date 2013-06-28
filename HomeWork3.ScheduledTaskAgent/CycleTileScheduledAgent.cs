@@ -16,18 +16,6 @@ namespace HomeWork3ScheduledTasks
 {
     public class CycleTileScheduledAgent : ScheduledTaskAgent
     {
-        public string Topic
-        {
-            get { return IsolatedStorageSettings.ApplicationSettings[CycleTileScheduledAgent.TopicKeyName] as string; }
-            set
-            {
-                IsolatedStorageSettings.ApplicationSettings[CycleTileScheduledAgent.TopicKeyName] = value;
-                IsolatedStorageSettings.ApplicationSettings.Save();
-            }
-        }
-
-        public const string TopicKeyName = @"topic";
-
         private readonly Random _random = new Random();
 
         /// <remarks>
@@ -75,7 +63,8 @@ namespace HomeWork3ScheduledTasks
 
         private async Task UpdateCycleTilesAsync()
         {
-            var Photos = (await DataProvider.Instance.GetPhotos(Topic, _ => null)).ToList();
+            var screenPhotoStats = IsoStoreHelper.LoadFromIsoStore<ScreenPhotoStats>(ScreenPhotoStats.ScreenPhotoStatsKeyName, _ => new ScreenPhotoStats());
+            var Photos = screenPhotoStats.StoredPhotos;
             if (Photos.Count == 0)
             {
                 return;
@@ -99,6 +88,7 @@ namespace HomeWork3ScheduledTasks
             {
                 return;
             }
+            var screenPhotoStats = IsoStoreHelper.LoadFromIsoStore<ScreenPhotoStats>(ScreenPhotoStats.ScreenPhotoStatsKeyName, _ => new ScreenPhotoStats());
 
             var photoUris = photos.Select(pi => new Uri(pi.ExternalUrl, UriKind.RelativeOrAbsolute)).ToArray();
             for (int i = 0; i < photoUris.Length; i++)
@@ -115,7 +105,7 @@ namespace HomeWork3ScheduledTasks
             // Images could be max Nine images.
             oCycleicon.CycleImages = photoUris;
             oCycleicon.Count = photoUris.Length;
-            oCycleicon.Title = Topic; //DateTime.Now.ToString("o"); //string.Concat("New ", photoUris.Length, " pics!"); ;
+            oCycleicon.Title = screenPhotoStats.Topic; //DateTime.Now.ToString("o"); //string.Concat("New ", photoUris.Length, " pics!"); ;
             TileManager.Instance.SetApplicationTileData(oCycleicon);
         }
     }

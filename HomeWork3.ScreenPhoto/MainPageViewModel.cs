@@ -15,20 +15,6 @@ using Windows.Phone.System.UserProfile;
 
 namespace HomeWork3
 {
-    public class ScreenPhotoStats
-    {
-        public const string ScreenPhotoStatsKeyName = @"__ScreenPhotoStatsKeyName__";
-        public string Topic { get; set; }
-        public List<PhotoItem> StoredPhotos { get; set; }
-
-        public ScreenPhotoStats()
-        {
-            Topic = @"Love"; //string.Empty;
-            StoredPhotos = new List<PhotoItem>();
-        }
-    }
-
-
     public class MainPageViewModel : BindableBase
     {
         #region Title (INotifyPropertyChanged Property)
