@@ -13,7 +13,7 @@ namespace HomeWork2.Models
 
         public ScreenPhotoStats()
         {
-            Topic = @"Love"; //string.Empty;
+            Topic = @"Dayna Baby Lou"; //string.Empty;
             StoredPhotos = new List<PhotoItem>();
         }
     }
