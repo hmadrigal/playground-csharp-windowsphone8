@@ -1,9 +1,10 @@
-﻿using System;
+﻿using HomeWork2.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace HomeWork2.Models
+namespace HomeWork3
 {
     public class ScreenPhotoStats
     {
