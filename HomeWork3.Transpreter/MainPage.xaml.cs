@@ -13,21 +13,17 @@ namespace HomeWork3.Transpreter
 {
     public partial class MainPage : PhoneApplicationPage
     {
-
         public MainPageViewModel View { get { return DataContext as MainPageViewModel; } }
 
         public MainPage()
         {
             InitializeComponent();
-            Loaded += OnMainPageLoaded;
-
         }
 
-        private void OnMainPageLoaded(object sender, RoutedEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            Loaded -= OnMainPageLoaded;
-            View.ViewLoadedCommand.Execute(null);
+            base.OnNavigatedTo(e);
+            View.OnNavigatedTo(e);
         }
-
     }
 }

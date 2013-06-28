@@ -135,6 +135,15 @@
     <value>Menu Item</value>
   </data>
   <data name="MainPage_WelcomeMessage" xml:space="preserve">
-    <value>Tell me what do you want to translate?</value>
+    <value>Say what you want to translate</value>
+  </data>
+  <data name="MainPage_Change" xml:space="preserve">
+    <value>change</value>
+  </data>
+  <data name="MainPage_ConfirmMessage" xml:space="preserve">
+    <value>You can say continue or change</value>
+  </data>
+  <data name="MainPage_Continue" xml:space="preserve">
+    <value>continue</value>
   </data>
 </root>

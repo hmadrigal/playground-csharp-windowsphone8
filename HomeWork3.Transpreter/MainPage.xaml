@@ -49,32 +49,15 @@
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
             <TextBlock Text="TRANSPRETER" Style="{StaticResource PhoneTextNormalStyle}" Margin="12,0"/>
-            <TextBlock Text="page name" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+            <TextBlock Text="SP -> EN" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Button Content="Listen" Command="{Binding TurnOnSpeechRecognizerUICommand,Mode=OneTime}" />
-            <Button Content="Read" Grid.Column="1" Command="{Binding TurnOnSpeechSynthesizerCommand,Mode=OneTime}" CommandParameter="{Binding Source}"  BorderThickness="5" />
-            <Border Grid.Row="1" BorderBrush="{StaticResource PhoneAccentBrush}" Background="{StaticResource PhoneBackgroundBrush}" BorderThickness="5" >
-                <ScrollViewer>
-                    <TextBlock Text="{Binding Source}" TextWrapping="Wrap" />
-                </ScrollViewer>
-            </Border>
-            <Border Grid.Row="1" Grid.Column="1" BorderBrush="{StaticResource PhoneAccentBrush}" Background="{StaticResource PhoneBackgroundBrush}" BorderThickness="5">
-                <ScrollViewer>
-                    <TextBlock Text="{Binding Destination}"/>
-                </ScrollViewer>
-            </Border>
-
+            <ScrollViewer>
+				<TextBlock
+					Text="{Binding ListenText}" />
+			</ScrollViewer>
         </Grid>
 
         <!--Uncomment to see an alignment grid to help ensure your controls are

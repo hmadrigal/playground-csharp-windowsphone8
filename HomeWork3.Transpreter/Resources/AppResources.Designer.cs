@@ -88,7 +88,34 @@ namespace HomeWork3.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tell me what do you want to translate?.
+        ///   Looks up a localized string similar to change.
+        /// </summary>
+        public static string MainPage_Change {
+            get {
+                return ResourceManager.GetString("MainPage_Change", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can say continue or change.
+        /// </summary>
+        public static string MainPage_ConfirmMessage {
+            get {
+                return ResourceManager.GetString("MainPage_ConfirmMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to continue.
+        /// </summary>
+        public static string MainPage_Continue {
+            get {
+                return ResourceManager.GetString("MainPage_Continue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Say what you want to translate.
         /// </summary>
         public static string MainPage_WelcomeMessage {
             get {

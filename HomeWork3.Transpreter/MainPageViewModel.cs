@@ -15,68 +15,28 @@ namespace HomeWork3
 {
     public class MainPageViewModel : BindableBase
     {
-        #region Source (INotifyPropertyChanged Property)
-        public string Source
+        #region ListenText (INotifyPropertyChanged Property)
+        public string ListenText
         {
-            get { return _myProperty; }
-            set { SetProperty(ref _myProperty, value); }
+            get { return _listenText; }
+            set { SetProperty(ref _listenText, value); }
         }
-        private string _myProperty;
+        private string _listenText;
         #endregion
-
-        #region Destination (INotifyPropertyChanged Property)
-        public string Destination
-        {
-            get { return _destination; }
-            set { SetProperty(ref _destination, value); }
-        }
-        private string _destination;
-        #endregion
-        
-        public ICommand TurnOnSpeechRecognizerUICommand { get; private set; }
-
-        public ICommand ViewLoadedCommand { get; private set; }
-
-        public ICommand TurnOnSpeechSynthesizerCommand { get; private set; }
 
         private SpeechRecognizerUI _speechRecognizerUI;
 
         public MainPageViewModel()
         {
             SetupVoiceCommands();
-            ViewLoadedCommand = new RelayCommand(OnViewLoadedCommandInvoked);
-            TurnOnSpeechRecognizerUICommand = new RelayCommand(OnTurnOnSpeechRecognizerUICommandInvoked);
-            TurnOnSpeechSynthesizerCommand = new RelayCommand<string>(OnTurnOnSpeechSynthesizerCommandInvoked);
-        }
-
-        private async void OnTurnOnSpeechSynthesizerCommandInvoked(string text)
-        {
-            await Say(text);
-        }
-
-        private async void OnTurnOnSpeechRecognizerUICommandInvoked()
-        {
-            _speechRecognizerUI = new SpeechRecognizerUI();
-            SpeechRecognitionUIResult recoResult = await _speechRecognizerUI.RecognizeWithUIAsync();
-            if (recoResult.ResultStatus == SpeechRecognitionUIStatus.Succeeded)
-            {
-                Source = recoResult.RecognitionResult.Text;
-            }
         }
 
 
-        private async void OnViewLoadedCommandInvoked()
-        {
-            await Say(AppResources.MainPage_WelcomeMessage);
-            OnTurnOnSpeechRecognizerUICommandInvoked();
-        }
 
         private async void SetupVoiceCommands()
         {
             await VoiceCommandService.InstallCommandSetsFromFileAsync(new Uri("ms-appx:///VCD.xml", UriKind.RelativeOrAbsolute));
         }
-
-
 
         private async Task Say(string text)
         {
@@ -89,6 +49,33 @@ namespace HomeWork3
             //                   select voice; 
             //// Set the voice as identified by the query. 
             //synth.SetVoice(frenchVoices.ElementAt(0));
+        }
+
+        internal async void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
+        {
+            // Asks the user to say something
+            await Say(AppResources.MainPage_WelcomeMessage);
+
+            // Waits the user to say something, until the app recognizes what the user says
+            SpeechRecognitionUIResult speechRecognitionResult = await Listen();
+
+            // Shows what the user 
+            ListenText = speechRecognitionResult.RecognitionResult.Text;
+
+            // Asks the user to say: continue or change
+            await Say(AppResources.MainPage_ConfirmMessage);
+        }
+
+        private async Task<SpeechRecognitionUIResult> Listen(SpeechRecognitionConfidence? confidence = null)
+        {
+            SpeechRecognitionUIResult speechRecognitionResult;
+            do
+            {
+                _speechRecognizerUI = new SpeechRecognizerUI();
+                speechRecognitionResult = await _speechRecognizerUI.RecognizeWithUIAsync();
+            } while ((speechRecognitionResult.ResultStatus == SpeechRecognitionUIStatus.Succeeded)
+            && (confidence == null ? true : confidence.Value == speechRecognitionResult.RecognitionResult.TextConfidence));
+            return speechRecognitionResult;
         }
     }
 }
