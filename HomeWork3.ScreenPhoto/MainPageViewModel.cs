@@ -51,13 +51,67 @@ namespace HomeWork3
 
         public ObservableCollection<Object> DisplayItems { get; private set; }
 
-        List<PhotoItem> _requestedPhotoItems;
+        private List<PhotoItem> _requestedPhotoItems;
+
+        private readonly Random _random = new Random();
 
         public MainPageViewModel()
         {
             DisplayItems = new ObservableCollection<Object>();
+            DisplayItems.CollectionChanged += OnDisplayItemsCollectionChanged;
             TransferManager.Instance.SubscribeToProgress(OnTransferProgressChanged);
             TransferManager.Instance.SubscribeToStatus(OnTransferCompletedChanged, bt => bt.TransferStatus == Microsoft.Phone.BackgroundTransfer.TransferStatus.Completed);
+        }
+
+        private async void OnDisplayItemsCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+            {
+                var currenPhotoItems = DisplayItems.OfType<PhotoItem>().ToList();
+                if (currenPhotoItems.Count == 1)
+                {
+                    try
+                    {
+                        await LockManager.Instance.LockScreenChange(currenPhotoItems[0].LocalFilename);
+                    }
+                    catch { }
+                }
+                else if (currenPhotoItems.Count == 9)
+                {
+                    await UpdateTileDate(currenPhotoItems);
+                    try
+                    {
+                        LockManager.Instance.LockScreenChangeSilently(currenPhotoItems[_random.Next(currenPhotoItems.Count)].LocalFilename);
+                    }
+                    catch { }
+                }
+            }
+        }
+
+        private async Task UpdateTileDate(IEnumerable<PhotoItem> photos)
+        {
+            if (photos == null || !photos.Any())
+            {
+                return;
+            }
+            var screenPhotoStats = IsoStoreHelper.LoadFromIsoStore<ScreenPhotoStats>(ScreenPhotoStats.ScreenPhotoStatsKeyName, _ => new ScreenPhotoStats());
+            var photoUris = photos.Select(pi => new Uri(pi.ExternalUrl, UriKind.RelativeOrAbsolute)).ToArray();
+            for (int i = 0; i < photoUris.Length; i++)
+            {
+                LifeTimePolicyAccessor.Instance.SetTimeToLive(photoUris[i], TimeSpan.FromMinutes(30));
+                var photoStream = await ContentAccessors.Instance.GetContent(photoUris[i], LifeTimePolicyAccessor.Instance);
+                var fileName = string.Concat("CycleTileDataImg", i);
+                await TileManager.Instance.SaveToSharedShellDirectory(fileName, photoStream);
+                photoUris[i] = new Uri(TileManager.Instance.GetShellDirectoryFilePath(fileName), UriKind.RelativeOrAbsolute);
+            }
+
+            CycleTileData oCycleicon = new CycleTileData();
+            oCycleicon.SmallBackgroundImage = new Uri("Photovoltaic-Panel.png", UriKind.Relative);
+            // Images could be max Nine images.
+            oCycleicon.CycleImages = photoUris;
+            oCycleicon.Count = photoUris.Length;
+            oCycleicon.Title = screenPhotoStats.Topic; //DateTime.Now.ToString("o"); //string.Concat("New ", photoUris.Length, " pics!"); ;
+            TileManager.Instance.SetApplicationTileData(oCycleicon);
         }
 
         public void OnTransferProgressChanged(Microsoft.Phone.BackgroundTransfer.BackgroundTransferRequest request)
@@ -78,6 +132,7 @@ namespace HomeWork3
             {
                 return;
             }
+            var index = DisplayItems.IndexOf(transferPayload);
             DisplayItems.Remove(transferPayload);
             requestedPhotoItem.LocalFilename = transferPayload.LocalUrl;
             try
@@ -89,7 +144,7 @@ namespace HomeWork3
                 }
             }
             catch { }
-            DisplayItems.Add(requestedPhotoItem);
+            DisplayItems.Insert(index, requestedPhotoItem);
             System.Diagnostics.Debug.WriteLine("Pending Transfers Count: {0}", DisplayItems.OfType<TransferPayload>().Count());
         }
 
@@ -182,6 +237,10 @@ namespace HomeWork3
 
         internal void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
+            if (e.NavigationMode == System.Windows.Navigation.NavigationMode.New)
+            {
+
+            }
             LoadContent();
         }
 
