@@ -34,7 +34,7 @@
           </LargeContent2>
           <LargeContent3>
           </LargeContent3>
-          <DeviceLockImageURI>LockIcon.png</DeviceLockImageURI>
+          <DeviceLockImageURI IsRelative="true" IsResource="false">Assets\LockImage.png</DeviceLockImageURI>
         </TemplateIconic>
       </PrimaryToken>
     </Tokens>

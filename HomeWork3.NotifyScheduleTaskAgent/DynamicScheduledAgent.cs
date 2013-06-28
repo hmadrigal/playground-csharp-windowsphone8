@@ -63,8 +63,9 @@ namespace HomeWork3ScheduledTasks
             var oIconicTileData = new IconicTileData();
             oIconicTileData.Title = DateTime.Now.ToString("o");
             oIconicTileData.WideContent1 = string.Format("NOW: {0}", weatherResult.Item1.WeatherDesc);
-            oIconicTileData.WideContent2 = weatherResult.Item2.FirstOrDefault().WeatherDesc;
-            oIconicTileData.WideContent3 = weatherResult.Item2.Skip(1).FirstOrDefault().WeatherDesc;
+            oIconicTileData.WideContent2 = string.Format("Tomorrow: {0}", weatherResult.Item2.FirstOrDefault().WeatherDesc);
+            oIconicTileData.WideContent3 = string.Format("After tomorrow: {0}", weatherResult.Item2.Skip(1).FirstOrDefault().WeatherDesc);
+            oIconicTileData.Count = 3;
             TileManager.Instance.SetApplicationTileData(oIconicTileData);
         }
     }

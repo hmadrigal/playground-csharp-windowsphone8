@@ -137,9 +137,9 @@
     <Content Include="Assets\ApplicationIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="LockIcon.png">
+    <Content Include="Assets\LockImage.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
     <None Include="Assets\Iconic-Medium-Overcast-Weather.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
