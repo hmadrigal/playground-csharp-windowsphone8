@@ -1,4 +1,4 @@
-﻿using HomeWorkEx.NoteTaking.Resources;
+﻿using HomeWorkEx.Resources;
 
 namespace HomeWorkEx.NoteTaking
 {

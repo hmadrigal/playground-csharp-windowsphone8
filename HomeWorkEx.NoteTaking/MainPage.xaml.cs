@@ -7,9 +7,9 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
-using HomeWorkEx.NoteTaking.Resources;
+using HomeWorkEx.Resources;
 
-namespace HomeWorkEx.NoteTaking
+namespace HomeWorkEx
 {
     public partial class MainPage : PhoneApplicationPage
     {
