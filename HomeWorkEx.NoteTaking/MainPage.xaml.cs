@@ -13,6 +13,8 @@ namespace HomeWorkEx
 {
     public partial class MainPage : PhoneApplicationPage
     {
+        public MainPageViewModel ViewModel { get { return DataContext as MainPageViewModel; } }
+
         // Constructor
         public MainPage()
         {
@@ -20,6 +22,11 @@ namespace HomeWorkEx
 
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
+        }
+
+        private void OnAddClicked(object sender, EventArgs e)
+        {
+            ViewModel.AddCommandInvoked.Execute(null);
         }
 
         // Sample code for building a localized ApplicationBar

@@ -1,6 +1,4 @@
-﻿using HomeWork2.Interactivity;
-using HomeWork2.ViewModels;
-using Microsoft.Phone.Controls;
+﻿using HomeWork2.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,12 +6,10 @@ using System.IO.IsolatedStorage;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Input;
 
 namespace HomeWorkEx
 {
-    public class MainPageViewModel : BindableBase
+    public class NoteEditPageViewModel : BindableBase
     {
         #region SelectedNote (INotifyPropertyChanged Property)
         public Note SelectedNote
@@ -41,17 +37,29 @@ namespace HomeWorkEx
             }
         }
 
-        public ICommand AddCommandInvoked { get; private set; }
+        private int _noteId = -1;
 
-        public MainPageViewModel()
+        internal void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e, System.Windows.Navigation.NavigationContext navigationContext, System.Windows.Navigation.NavigationService navigationService)
         {
-            Notes = new ObservableCollection<Note>();
-            AddCommandInvoked = new RelayCommand(OnAddCommandInvokedInvoked);
+            _noteId = int.Parse(navigationContext.QueryString["noteId"]);
+            if (_noteId == -1)
+            {
+                SelectedNote = new Note();
+            }
+            else
+            {
+                SelectedNote = Notes[_noteId];
+            }
         }
 
-        private void OnAddCommandInvokedInvoked()
+        internal void OnNavigatingFrom(System.Windows.Navigation.NavigatingCancelEventArgs e, System.Windows.Navigation.NavigationContext navigationContext, System.Windows.Navigation.NavigationService navigationService)
         {
-            (Application.Current.RootVisual as PhoneApplicationFrame).Navigate(new Uri("/NoteEditPage.xaml?noteId=-1", UriKind.RelativeOrAbsolute));
+            if (_noteId == -1)
+            {
+                Notes.Add(SelectedNote);
+            }
+            IsolatedStorageSettings.ApplicationSettings.Save();
         }
+
     }
 }
