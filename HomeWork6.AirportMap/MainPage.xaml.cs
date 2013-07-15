@@ -20,7 +20,7 @@ namespace HomeWork6.AirportMap
     public partial class MainPage : PhoneApplicationPage
     {
 
-        private GeoCoordinate MyCoordinate = null;
+        //private GeoCoordinate MyCoordinate = null;
 
         private double _accuracy = 0.0;
 
@@ -34,22 +34,22 @@ namespace HomeWork6.AirportMap
             mapView.Layers.Add(mapLayer);
         }
 
-        private void wsc_GetAirportInformationByCountryCompleted(object sender, WebServiceX.AirportServiceReference.GetAirportInformationByCountryCompletedEventArgs e)
+        private async void OnGetAirportInformationByCountryCompleted(object sender, WebServiceX.AirportServiceReference.GetAirportInformationByCountryCompletedEventArgs e)
         {
-            (sender as WebServiceX.AirportServiceReference.airportSoapClient).GetAirportInformationByCountryCompleted -= wsc_GetAirportInformationByCountryCompleted;
+            (sender as WebServiceX.AirportServiceReference.airportSoapClient).GetAirportInformationByCountryCompleted -= OnGetAirportInformationByCountryCompleted;
             if (e.Error != null)
             {
                 MessageBox.Show("There has been an error calling the Web Service.\n" + e.Error.Message);
                 return;
             }
-
-            Task.Run(() =>
+            mapView.Layers[0].Clear();
+            var myCoordinate = await Task.Run(async () =>
             {
                 // Gets and draws the current location
-                GetCurrentCoordinate();
+                return await GetCurrentCoordinate();
             });
 
-            Task.Run(() =>
+            await Task.Run(() =>
             {
                 var countryFlagUrl = AppConfig.Instance.CountryFlagUrl;
                 var document = XDocument.Parse(e.Result);
@@ -73,14 +73,13 @@ namespace HomeWork6.AirportMap
                                     LongitudeSeconds = double.Parse((string)tableElement.Element("LongitudeSeconds") ?? "0"),
                                     LongitudeEperW = (string)tableElement.Element("LongitudeEperW"),
                                     MetaData = countryFlagUrl,
-                                }).Take(25).ToArray();
+                                }).ToArray();
 
                 _mapItems.Clear();
                 _mapItems.AddRange(mapItems);
                 //Creating a MapOverlay and adding the Grid to it.
                 Dispatcher.BeginInvoke(() =>
                 {
-                    mapView.Layers[0].Clear();
                     for (int i = 0; i < mapItems.Length; i++)
                     {
                         //var overlay = DrawAirportMarker(mapItems[i], mapLayer);
@@ -89,40 +88,12 @@ namespace HomeWork6.AirportMap
                             (mapItems[i].LatitudeNpeerS == "N" ? 1.0 : -1.0) * MapTableItem.ConvertDegreeAngleToDouble(mapItems[i].LatitudeDegree, mapItems[i].LatitudeMinute, mapItems[i].LatitudeSecond),
                             (mapItems[i].LongitudeEperW == "E" ? 1.0 : -1.0) * MapTableItem.ConvertDegreeAngleToDouble(mapItems[i].LongitudeDegree, mapItems[i].LongitudeMinute, mapItems[i].LongitudeSeconds));
                         mapItems[i].Coordinate = gc;
-                        DrawCurrentLocation(mapItems[i], gc, mapView.Layers[0], mapView, "AirportMarkerStyle");
+                        DrawMark(mapItems[i], gc, mapView.Layers[0], mapView, "AirportMarkerStyle");
                     }
                 });
             });
-
-        }
-
-        private void OnSettingsClicked(object sender, EventArgs e)
-        {
-            NavigationService.Navigate(new Uri("/ConfigPage.xaml", UriKind.RelativeOrAbsolute));
-        }
-
-        private async void GetCurrentCoordinate()
-        {
-            Geolocator geolocator = new Geolocator();
-            geolocator.DesiredAccuracy = PositionAccuracy.High;
-
-            try
+            await Task.Run(() =>
             {
-                Geoposition currentPosition = await geolocator.GetGeopositionAsync(TimeSpan.FromMinutes(1),
-                                                                                   TimeSpan.FromSeconds(10));
-                _accuracy = currentPosition.Coordinate.Accuracy;
-                MyCoordinate = new GeoCoordinate(currentPosition.Coordinate.Latitude, currentPosition.Coordinate.Longitude);
-                Dispatcher.BeginInvoke(() =>
-                {
-                    DrawCurrentLocation(new MapTableItem()
-                    {
-                        MetaData = new System.Windows.Media.SolidColorBrush(GetColorBrush(AppConfig.Instance.Color)),
-                        LatitudeDegree = MyCoordinate.Latitude,
-                        LongitudeDegree = MyCoordinate.Longitude,
-                    }, MyCoordinate, mapView.Layers[0], mapView, "MyLocationStyle");
-                    // Sets the view pointing where the PushPin is.
-                    mapView.SetView(MyCoordinate, 15, MapAnimationKind.Parabolic);
-                });
 
                 // Computes the sizes of the flags
                 for (int i = 0; i < _mapItems.Count; i++)
@@ -135,28 +106,64 @@ namespace HomeWork6.AirportMap
                         continue;
                     }
                     //Microsoft.Xna.Framework.MathHelper.Lerp(
-                    mapItem.Distance = distance(mapItem.Coordinate.Latitude, mapItem.Coordinate.Longitude, MyCoordinate.Latitude, MyCoordinate.Longitude, 'K');// mapItem.Coordinate.GetDistanceTo(MyCoordinate);
+                    mapItem.Distance = distance(mapItem.Coordinate.Latitude, mapItem.Coordinate.Longitude, myCoordinate.Latitude, myCoordinate.Longitude, 'K');// mapItem.Coordinate.GetDistanceTo(MyCoordinate);
                 }
-                var minDist =_mapItems.Min(mi => mi.Distance);
+                var minDist = _mapItems.Min(mi => mi.Distance);
                 var maxDist = _mapItems.Max(mi => mi.Distance);
-                if (minDist == 0 || maxDist == 0 || minDist == maxDist)
-                    return;
+                if (minDist == 0 || maxDist == 0 || minDist == maxDist) { }
+                else
+                {
+                    Dispatcher.BeginInvoke(() =>
+                    {
+                        for (int i = 0; i < _mapItems.Count; i++)
+                        {
+                            var mapItem = _mapItems[i];
+                            mapItem.ScaleFactor = (mapItem.Distance / maxDist);
+                            mapItem.ScaleFactor = 1 - (mapItem.ScaleFactor < 0.25d ? 0.25d : mapItem.ScaleFactor);
+                        }
+                        progressBar.IsIndeterminate = false;
+                    });
+                }
+            });
+
+
+        }
+
+        private void OnSettingsClicked(object sender, EventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/ConfigPage.xaml", UriKind.RelativeOrAbsolute));
+        }
+
+        private async Task<GeoCoordinate> GetCurrentCoordinate()
+        {
+            Geolocator geolocator = new Geolocator();
+            geolocator.DesiredAccuracy = PositionAccuracy.High;
+            GeoCoordinate myCoordinate = null;
+            try
+            {
+                Geoposition currentPosition = await geolocator.GetGeopositionAsync(TimeSpan.FromMinutes(1),
+                                                                                   TimeSpan.FromSeconds(10));
+                _accuracy = currentPosition.Coordinate.Accuracy;
+                myCoordinate = new GeoCoordinate(currentPosition.Coordinate.Latitude, currentPosition.Coordinate.Longitude);
                 Dispatcher.BeginInvoke(() =>
                 {
-                    for (int i = 0; i < _mapItems.Count; i++)
+                    DrawMark(new MapTableItem()
                     {
-                        var mapItem = _mapItems[i];
-                        mapItem.ScaleFactor = (mapItem.Distance / maxDist);
-                        mapItem.ScaleFactor = 1- (mapItem.ScaleFactor < 0.5d ? 0.5d : mapItem.ScaleFactor);
-                    }
+                        MetaData = new System.Windows.Media.SolidColorBrush(GetColorBrush(AppConfig.Instance.Color)),
+                        LatitudeDegree = myCoordinate.Latitude,
+                        LongitudeDegree = myCoordinate.Longitude,
+                    }, myCoordinate, mapView.Layers[0], mapView, "MyLocationStyle");
+                    // Sets the view pointing where the PushPin is.
+                    mapView.SetView(myCoordinate, 15, MapAnimationKind.Parabolic);
                 });
-
+                
             }
             catch
             {
                 // Couldn't get current location - location might be disabled in settings
                 MessageBox.Show("Current location cannot be obtained. Check that location service is turned on in phone settings.");
             }
+            return myCoordinate;
         }
 
         private double distance(double lat1, double lon1, double lat2, double lon2, char unit)
@@ -187,8 +194,7 @@ namespace HomeWork6.AirportMap
             return (rad / Math.PI * 180.0);
         }
 
-
-        private void DrawCurrentLocation(MapTableItem dc, GeoCoordinate gc, MapLayer mapLayer, Map myMap, string style)
+        private void DrawMark(MapTableItem dc, GeoCoordinate gc, MapLayer mapLayer, Map myMap, string style)
         {
             var myControlMark = new ContentControl()
             {
@@ -231,9 +237,10 @@ namespace HomeWork6.AirportMap
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            progressBar.IsIndeterminate = true;
             mapView.CartographicMode = AppConfig.Instance.CartographicMode;
             var wsc = new WebServiceX.AirportServiceReference.airportSoapClient();
-            wsc.GetAirportInformationByCountryCompleted += wsc_GetAirportInformationByCountryCompleted;
+            wsc.GetAirportInformationByCountryCompleted += OnGetAirportInformationByCountryCompleted;
             wsc.GetAirportInformationByCountryAsync(AppConfig.Instance.Country);
         }
 

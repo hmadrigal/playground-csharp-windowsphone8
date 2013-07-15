@@ -102,6 +102,7 @@
 
         </Grid>
 
+        <ProgressBar x:Name="progressBar" HorizontalAlignment="Stretch" VerticalAlignment="Top" />
     </Grid>
 
 </phone:PhoneApplicationPage>
