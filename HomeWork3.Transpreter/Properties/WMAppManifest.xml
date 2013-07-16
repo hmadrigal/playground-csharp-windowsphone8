@@ -1,11 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2012/deployment" AppPlatformVersion="8.0">
   <DefaultLanguage xmlns="" code="en-US" />
-  <Languages xmlns="">
-    <Language code="en-US" />
-    <Language code="es-ES" />
-  </Languages>
-  <App xmlns="" ProductID="{6334042d-46f4-4f63-9742-fce7dd564941}" Title="HomeWork3.Transpreter" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="HomeWork3.Transpreter author" Description="Sample description" Publisher="HomeWork3.Transpreter" PublisherID="{635e415b-4488-41c8-8eda-f7e884de40ee}">
+  <App xmlns="" ProductID="{767e751a-2d75-4116-9d22-de1e39ff9eb4}" Title="HomeWork3.Transpreter" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="HomeWork3.Transpreter author" Description="Sample description" Publisher="HomeWork3.Transpreter" PublisherID="{1241b699-a6ed-41e8-9d19-373b863eceb6}">
     <IconPath IsRelative="true" IsResource="false">Assets\ApplicationIcon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_NETWORKING" />
@@ -13,8 +9,8 @@
       <Capability Name="ID_CAP_MEDIALIB_PLAYBACK" />
       <Capability Name="ID_CAP_SENSORS" />
       <Capability Name="ID_CAP_WEBBROWSERCOMPONENT" />
-      <Capability Name="ID_CAP_SPEECH_RECOGNITION" />
       <Capability Name="ID_CAP_MICROPHONE" />
+      <Capability Name="ID_CAP_SPEECH_RECOGNITION" />
     </Capabilities>
     <Tasks>
       <DefaultTask Name="_default" NavigationPage="MainPage.xaml" />
