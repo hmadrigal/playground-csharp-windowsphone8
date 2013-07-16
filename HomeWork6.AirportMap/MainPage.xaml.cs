@@ -73,7 +73,7 @@ namespace HomeWork6.AirportMap
                                     LongitudeSeconds = double.Parse((string)tableElement.Element("LongitudeSeconds") ?? "0"),
                                     LongitudeEperW = (string)tableElement.Element("LongitudeEperW"),
                                     MetaData = countryFlagUrl,
-                                }).ToArray();
+                                }).Distinct(MapTableItemComparer.Instance).ToArray();
 
                 _mapItems.Clear();
                 _mapItems.AddRange(mapItems);
@@ -156,7 +156,7 @@ namespace HomeWork6.AirportMap
                     // Sets the view pointing where the PushPin is.
                     mapView.SetView(myCoordinate, 15, MapAnimationKind.Parabolic);
                 });
-                
+
             }
             catch
             {
@@ -248,6 +248,43 @@ namespace HomeWork6.AirportMap
         {
             base.OnNavigatingFrom(e);
             AppConfig.Instance.Save();
+        }
+
+        public sealed class MapTableItemComparer : IEqualityComparer<MapTableItem>
+        {
+            public bool Equals(MapTableItem x, MapTableItem y)
+            {
+                return x.AirportCode == y.AirportCode;
+            }
+
+            public int GetHashCode(MapTableItem obj)
+            {
+                return obj.GetHashCode() + base.GetHashCode();
+            }
+
+            private void Initializecomparer()
+            {
+            }
+
+            #region Singleton Pattern w/ Constructor
+            private MapTableItemComparer()
+                : base()
+            {
+                Initializecomparer();
+            }
+            public static MapTableItemComparer Instance
+            {
+                get
+                {
+                    return SingletoncomparerCreator._Instance;
+                }
+            }
+            private class SingletoncomparerCreator
+            {
+                private SingletoncomparerCreator() { }
+                public static MapTableItemComparer _Instance = new MapTableItemComparer();
+            }
+            #endregion
         }
     }
 }
