@@ -73,7 +73,7 @@ namespace HomeWork6.AirportMap
                                     LongitudeSeconds = double.Parse((string)tableElement.Element("LongitudeSeconds") ?? "0"),
                                     LongitudeEperW = (string)tableElement.Element("LongitudeEperW"),
                                     MetaData = countryFlagUrl,
-                                }).Distinct(MapTableItemComparer.Instance).ToArray();
+                                }).Distinct(MapTableItemComparer.Instance).Take(50).ToArray();
 
                 _mapItems.Clear();
                 _mapItems.AddRange(mapItems);
@@ -255,7 +255,9 @@ namespace HomeWork6.AirportMap
         {
             public bool Equals(MapTableItem x, MapTableItem y)
             {
-                return x.AirportCode == y.AirportCode;
+                if (x == null || y == null)
+                    return false;
+                return x.CityOrAirportName == y.CityOrAirportName || x.AirportCode == y.AirportCode;
             }
 
             public int GetHashCode(MapTableItem obj)
