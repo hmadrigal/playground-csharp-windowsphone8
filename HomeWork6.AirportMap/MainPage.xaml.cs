@@ -250,6 +250,7 @@ namespace HomeWork6.AirportMap
             AppConfig.Instance.Save();
         }
 
+        #region MapTableItemComparer
         public sealed class MapTableItemComparer : IEqualityComparer<MapTableItem>
         {
             public bool Equals(MapTableItem x, MapTableItem y)
@@ -285,6 +286,7 @@ namespace HomeWork6.AirportMap
                 public static MapTableItemComparer _Instance = new MapTableItemComparer();
             }
             #endregion
-        }
+        } 
+        #endregion
     }
 }
