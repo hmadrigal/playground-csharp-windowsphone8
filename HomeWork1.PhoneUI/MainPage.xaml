@@ -1,0 +1,144 @@
+﻿<phone:PhoneApplicationPage
+    x:Class="HomeWork1.PhoneUI.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    shell:SystemTray.IsVisible="True"
+    >
+    <phone:PhoneApplicationPage.Resources>
+        <ControlTemplate x:Key="WhiteChekers">
+            <Ellipse Fill="White" Width="40" Height="40" />
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="BlackChekers">
+            <Ellipse Fill="Red" Width="40" Height="40" />
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="WhiteBlock" >
+            <Rectangle Width="60" Height="60" Fill="LimeGreen"/>
+        </ControlTemplate>
+        <ControlTemplate x:Key="BlackBlock">
+            <Rectangle Width="60" Height="60" Fill="Wheat"/>
+        </ControlTemplate>
+    </phone:PhoneApplicationPage.Resources>
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid Name="LayoutRoot">
+        <Canvas x:Name="BoardPanel" Width="480" Height="480">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal">
+                    <ContentControl Tag="0" Template="{StaticResource BlackBlock}"/>
+                    <ContentControl Tag="1" Template="{StaticResource WhiteBlock}"/>
+                    <ContentControl Tag="2" Template="{StaticResource BlackBlock}"/>
+                    <ContentControl Tag="3" Template="{StaticResource WhiteBlock}"/>
+                    <ContentControl Tag="4" Template="{StaticResource BlackBlock}"/>
+                    <ContentControl Tag="5" Template="{StaticResource WhiteBlock}"/>
+                    <ContentControl Tag="6" Template="{StaticResource BlackBlock}"/>
+                    <ContentControl Tag="7" Template="{StaticResource WhiteBlock}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <ContentControl Tag="8" Template="{StaticResource WhiteBlock}"/>
+                    <ContentControl Tag="9" Template="{StaticResource BlackBlock}"/>
+                    <ContentControl Tag="10" Template="{StaticResource WhiteBlock}"/>
+                    <ContentControl Tag="11" Template="{StaticResource BlackBlock}"/>
+                    <ContentControl Tag="12" Template="{StaticResource WhiteBlock}"/>
+                    <ContentControl Tag="13" Template="{StaticResource BlackBlock}"/>
+                    <ContentControl Tag="14" Template="{StaticResource WhiteBlock}"/>
+                    <ContentControl Tag="15" Template="{StaticResource BlackBlock}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <ContentControl Tag="16" Template="{StaticResource BlackBlock}"/>
+                    <ContentControl Tag="17" Template="{StaticResource WhiteBlock}"/>
+                    <ContentControl Tag="18" Template="{StaticResource BlackBlock}"/>
+                    <ContentControl Tag="19" Template="{StaticResource WhiteBlock}"/>
+                    <ContentControl Tag="20" Template="{StaticResource BlackBlock}"/>
+                    <ContentControl Tag="21" Template="{StaticResource WhiteBlock}"/>
+                    <ContentControl Tag="22" Template="{StaticResource BlackBlock}"/>
+                    <ContentControl Tag="23" Template="{StaticResource WhiteBlock}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <ContentControl Tag="24" Template="{StaticResource WhiteBlock}"/>
+                    <ContentControl Tag="25" Template="{StaticResource BlackBlock}"/>
+                    <ContentControl Tag="26" Template="{StaticResource WhiteBlock}"/>
+                    <ContentControl Tag="27" Template="{StaticResource BlackBlock}"/>
+                    <ContentControl Tag="28" Template="{StaticResource WhiteBlock}"/>
+                    <ContentControl Tag="29" Template="{StaticResource BlackBlock}"/>
+                    <ContentControl Tag="30" Template="{StaticResource WhiteBlock}"/>
+                    <ContentControl Tag="31" Template="{StaticResource BlackBlock}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <ContentControl Tag="32" Template="{StaticResource BlackBlock}"/>
+                    <ContentControl Tag="33" Template="{StaticResource WhiteBlock}"/>
+                    <ContentControl Tag="34" Template="{StaticResource BlackBlock}"/>
+                    <ContentControl Tag="35" Template="{StaticResource WhiteBlock}"/>
+                    <ContentControl Tag="36" Template="{StaticResource BlackBlock}"/>
+                    <ContentControl Tag="37" Template="{StaticResource WhiteBlock}"/>
+                    <ContentControl Tag="38" Template="{StaticResource BlackBlock}"/>
+                    <ContentControl Tag="39" Template="{StaticResource WhiteBlock}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <ContentControl Tag="40" Template="{StaticResource WhiteBlock}"/>
+                    <ContentControl Tag="41" Template="{StaticResource BlackBlock}"/>
+                    <ContentControl Tag="42" Template="{StaticResource WhiteBlock}"/>
+                    <ContentControl Tag="43" Template="{StaticResource BlackBlock}"/>
+                    <ContentControl Tag="44" Template="{StaticResource WhiteBlock}"/>
+                    <ContentControl Tag="45" Template="{StaticResource BlackBlock}"/>
+                    <ContentControl Tag="46" Template="{StaticResource WhiteBlock}"/>
+                    <ContentControl Tag="47" Template="{StaticResource BlackBlock}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <ContentControl Tag="48" Template="{StaticResource BlackBlock}"/>
+                    <ContentControl Tag="49" Template="{StaticResource WhiteBlock}"/>
+                    <ContentControl Tag="50" Template="{StaticResource BlackBlock}"/>
+                    <ContentControl Tag="51" Template="{StaticResource WhiteBlock}"/>
+                    <ContentControl Tag="52" Template="{StaticResource BlackBlock}"/>
+                    <ContentControl Tag="53" Template="{StaticResource WhiteBlock}"/>
+                    <ContentControl Tag="54" Template="{StaticResource BlackBlock}"/>
+                    <ContentControl Tag="55" Template="{StaticResource WhiteBlock}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <ContentControl Tag="56" Template="{StaticResource WhiteBlock}"/>
+                    <ContentControl Tag="57" Template="{StaticResource BlackBlock}"/>
+                    <ContentControl Tag="58" Template="{StaticResource WhiteBlock}"/>
+                    <ContentControl Tag="59" Template="{StaticResource BlackBlock}"/>
+                    <ContentControl Tag="60" Template="{StaticResource WhiteBlock}"/>
+                    <ContentControl Tag="61" Template="{StaticResource BlackBlock}"/>
+                    <ContentControl Tag="62" Template="{StaticResource WhiteBlock}"/>
+                    <ContentControl Tag="63" Template="{StaticResource BlackBlock}"/>
+                </StackPanel>
+            </StackPanel>
+            <ContentControl Template="{StaticResource WhiteChekers}" />
+            <ContentControl Template="{StaticResource WhiteChekers}" />
+            <ContentControl Template="{StaticResource WhiteChekers}" />
+            <ContentControl Template="{StaticResource WhiteChekers}" />
+            <ContentControl Template="{StaticResource WhiteChekers}" />
+            <ContentControl Template="{StaticResource WhiteChekers}" />
+            <ContentControl Template="{StaticResource WhiteChekers}" />
+            <ContentControl Template="{StaticResource WhiteChekers}" />
+            <ContentControl Template="{StaticResource WhiteChekers}" />
+            <ContentControl Template="{StaticResource WhiteChekers}" />
+            <ContentControl Template="{StaticResource WhiteChekers}" />
+            <ContentControl Template="{StaticResource WhiteChekers}" />
+
+            <ContentControl Template="{StaticResource BlackChekers}" />
+            <ContentControl Template="{StaticResource BlackChekers}" />
+            <ContentControl Template="{StaticResource BlackChekers}" />
+            <ContentControl Template="{StaticResource BlackChekers}" />
+            <ContentControl Template="{StaticResource BlackChekers}" />
+            <ContentControl Template="{StaticResource BlackChekers}" />
+            <ContentControl Template="{StaticResource BlackChekers}" />
+            <ContentControl Template="{StaticResource BlackChekers}" />
+            <ContentControl Template="{StaticResource BlackChekers}" />
+            <ContentControl Template="{StaticResource BlackChekers}" />
+            <ContentControl Template="{StaticResource BlackChekers}" />
+            <ContentControl Template="{StaticResource BlackChekers}" />
+        </Canvas>
+    </Grid>
+</phone:PhoneApplicationPage>
